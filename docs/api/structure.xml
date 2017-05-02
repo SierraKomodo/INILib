@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project title="API Documentation" version="2.8.5">
+  <partials/>
+  <file path="StaticController.php" generated-path="StaticController.html" hash="bde7902359cf3a10f30326fce5bd8b32" package="Default">
+    <docblock line="0">
+      <description>API class that allows static usage of the master INI controller</description>
+      <long-description></long-description>
+      <tag name="author" line="0" description="SierraKomodo"/>
+      <tag name="license" line="0" description="GPL3" link="http://opensource.org/licenses/GPL-3.0"/>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <namespace-alias name="Controller">\SierraKomodo\INIController\Controller</namespace-alias>
+    <class final="false" abstract="false" namespace="SierraKomodo\INIController" line="26" package="SierraKomodo\INIController">
+      <extends>\SierraKomodo\INIController\Controller</extends>
+      <name>StaticController</name>
+      <full_name>\SierraKomodo\INIController\StaticController</full_name>
+      <docblock line="26">
+        <description>API class that allows static usage of the master INI controller</description>
+        <long-description>Provides a static interface for direct manipulation of INI files. All methods in this class directly read from and
+write to INI files.</long-description>
+        <tag name="api" line="26" description=""/>
+        <tag name="package" line="26" description="SierraKomodo\INIController"/>
+        <tag name="uses" line="26" description="" link="\SierraKomodo\INIController\Controller"/>
+        <tag name="version" line="26" description="0.1.0-dev Currently in development; Not fully tested yet."/>
+        <tag name="inherited_from" description="\SierraKomodo\INIController\Controller" refers="\SierraKomodo\INIController\Controller" link="/classes/SierraKomodo.INIController.Controller.html"/>
+      </docblock>
+      <property static="true" visibility="protected" namespace="SierraKomodo\INIController" line="35" package="SierraKomodo\INIController">
+        <name>$fileArray</name>
+        <full_name>\SierraKomodo\INIController\StaticController::fileArray</full_name>
+        <default>array()</default>
+        <docblock line="35">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="35" description="&lt;p&gt;Array containing the INI data from self::readFile(). Converted to a static property for use&#10;in static functions.&lt;/p&gt;" type="array" variable="$fileArray">
+            <type>array</type>
+          </tag>
+          <tag name="used-by" line="35" description="\SierraKomodo\INIController\StaticController::set()"/>
+          <tag name="used-by" line="35" description="\SierraKomodo\INIController\StaticController::fetch()"/>
+          <tag name="used-by" line="35" description="\SierraKomodo\INIController\StaticController::delete()"/>
+          <tag name="inherited_from" description="\SierraKomodo\INIController\Controller::fileArray" refers="\SierraKomodo\INIController\Controller::fileArray" link="/classes/SierraKomodo.INIController.Controller.html#property_fileArray"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="33" package="SierraKomodo\INIController">
+        <name>$file</name>
+        <full_name>\SierraKomodo\INIController\Controller::file</full_name>
+        <default>''</default>
+        <docblock line="33">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="33" description="&lt;p&gt;Contains the filepath used in the last call to readFile()&lt;/p&gt;" type="string" variable="$file">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="40" package="SierraKomodo\INIController">
+        <name>$fileArray</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileArray</full_name>
+        <default>array()</default>
+        <docblock line="40">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="40" description="&lt;p&gt;Array containing the output of parse_ini_file generated in the last call to readFile()&lt;/p&gt;" type="array" variable="$fileArray">
+            <type>array</type>
+          </tag>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="46" package="SierraKomodo\INIController">
+        <name>$fileContent</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileContent</full_name>
+        <default>''</default>
+        <docblock line="46">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="46" description="&lt;p&gt;Contains the output of the last call to generateFile()&lt;/p&gt;" type="string" variable="$fileContent">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="50" package="SierraKomodo\INIController">
+        <name>set</name>
+        <full_name>\SierraKomodo\INIController\StaticController::set()</full_name>
+        <docblock line="50">
+          <description>Adds/sets a specified key=value pair to an INI file.</description>
+          <long-description></long-description>
+          <tag name="param" line="50" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="50" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="50" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="50" description="" type="string" variable="$parValue">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="50" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="50" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="50" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="uses" line="50" description="" link="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parValue</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="73" package="SierraKomodo\INIController">
+        <name>fetch</name>
+        <full_name>\SierraKomodo\INIController\StaticController::fetch()</full_name>
+        <docblock line="73">
+          <description>Fetches the value of a requested key=value pair from an INI file.</description>
+          <long-description></long-description>
+          <tag name="param" line="73" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="73" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="73" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="73" description="The value of the requested key=value pair, or FALSE if no matching entry was found." type="boolean|string">
+            <type>boolean</type>
+            <type>string</type>
+          </tag>
+          <tag name="uses" line="73" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="73" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="98" package="SierraKomodo\INIController">
+        <name>delete</name>
+        <full_name>\SierraKomodo\INIController\StaticController::delete()</full_name>
+        <docblock line="98">
+          <description>Deletes a key=value pair from an INI file.</description>
+          <long-description></long-description>
+          <tag name="param" line="98" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="98" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="98" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="98" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="64" package="SierraKomodo\INIController">
+        <name>readFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::readFile()</full_name>
+        <docblock line="64">
+          <description>Reads the specified file.</description>
+          <long-description>Reads the specified file, storing the file name in $this-&gt;file, output of parse_ini_file() in $this-&gt;fileArray,
+and then running $this-&gt;generateFile() afterwards.</long-description>
+          <tag name="param" line="64" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="64" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="64" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="64" description="If $this-&gt;file does not exist or is unreadable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="64" description="If parse_ini_file() fails to parse $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="109" package="SierraKomodo\INIController">
+        <name>writeFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::writeFile()</full_name>
+        <docblock line="109">
+          <description>Writes data stored in $this-&gt;fileArray into $this-&gt;file</description>
+          <long-description></long-description>
+          <tag name="param" line="109" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="109" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="109" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="109" description="If $this-&gt;file is not writable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="109" description="If file_put_contents() fails to write to $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="145" package="SierraKomodo\INIController">
+        <name>generateFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::generateFile()</full_name>
+        <docblock line="145">
+          <description>Generates a fully formatted INI string and stores it in $this-&gt;fileContent</description>
+          <long-description></long-description>
+          <tag name="return" line="145" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+    </class>
+    <source>eJzlVt9P2zAQfkfif7iHSaOotEx7K5u2ahsTAm2Iou0BeDDJZbVw7cx22lUb//vu7DRJAwT2S5u0IFUhPn++77v7bD97kU/zzY3h9vbmBmzD+PgAEiWcAz8VHoRSZuHAeeFlAoUTnxBMRmMIM+E8Wjh4RxOM9tYohZYxAs5LUfipsTCRaK04NDOTmjigZILaIbw9PnrKX4abG/ynxQxdLhJcm3JO8K8q9D0OLFxXyHn9CsJBa+7v53lszVym6ECsJktN4RkTyYh/Ki0mnkC0zAtFAUYzMKNlUqEbwFgpmCGJlTqaS0tKV2YW56olWBQpZNbMQOg0LLuw0iN40wBqSJ/L+EJyXjGTu+WKcSSpg/MHiRonzNE6ZrI7eDLY3UlxDq8Ka1FzssSBPqAy+Yw+7ME74yErFI14JCVTWKIflIWPPCdBuEbh8ItHnTart7nxlabQE+vHD6chqMiU8xIesQbj8Bp/uVRCaqk/hSKyTKnwIqroUGWjEau6T9O2egNeiThxdqRpVcrcmpy+LkMlSaRqZeJYhmSFTrioQf8yLYpMdy6XnYq2OY9GDv1W71dBMvTJ9NdhUlToscYZxhfSw1NHkkol+4bsz2Mltnp7Mbb52yzaOE3dkLgGx+SYyEwS3hUun8+FKhByIW0ogq56u5K2ppULK6iO3nKBH9F/XMiO4QmGKnVEHOKyY/QD51aPW/SF1XBpjIJTS1mTF1yRJOjcmvTdrrqpe63nD8A0Aeqe/kmAsLGsI6yKX1zS1t3ue+C2XRWg39S6v5K1XytYYpZeDq0xhBPe3VYmzeo60tMy6mqdVY/VHVZCTdAHJI2LVku1MWulzxo5X5yVOV9QP1dZ37Xax9UmzEuuJ142SFyr1rRN4LrbK/vsZnQBP1Kho0MQ+OcibqUt25RHxF80TsMY38qY02byzOSu9PtAu+z++GjyBmQG2tChSfQZgs4Ru4QFneeZKXQ6+Nc81u2QuCd3e+RPG+Mk1oXBbhE9E4ouVTKWJ4qdGnT6saejWDpfQ1HMlnTs+YfZqNdrcrrhjPumN+hcA3KSt6MFAs3gB9nrdTjl+CD6l330vx8w5V2k2z+0XWu6Y/5pGx1k1YJ0S+cV+9SCMzPHsMBiahQSaMhtAO/pm11Ih1WQ0XQNru49CffdYN1cFZ+SULvhC32v+Xr3uuYBILWDb9rqhiy/5SC8/g7ITnDj</source>
+  </file>
+  <file path="Controller.php" generated-path="Controller.html" hash="204e513c23f452039c4ee6366b41a974" package="Default">
+    <docblock line="0">
+      <description>Master class that all other INI controllers in this package will extend.</description>
+      <long-description></long-description>
+      <tag name="author" line="0" description="SierraKomodo"/>
+      <tag name="license" line="0" description="GPL3" link="http://opensource.org/licenses/GPL-3.0"/>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <class final="false" abstract="false" namespace="SierraKomodo\INIController" line="26" package="SierraKomodo\INIController">
+      <extends/>
+      <name>Controller</name>
+      <full_name>\SierraKomodo\INIController\Controller</full_name>
+      <docblock line="26">
+        <description>Master class that all other INI controllers in this package will extend.</description>
+        <long-description>This class handles all of the common, internal functions for the INI controller. You probably don't want to directly
+use this class unless you're writing your own controller that extends it; Instead use one of the other classes that
+extend this.</long-description>
+        <tag name="internal" line="26" description="This class is designed for use by child classes that extend it, it is not meant to be used directly."/>
+        <tag name="package" line="26" description="SierraKomodo\INIController"/>
+        <tag name="used-by" line="26" description="\SierraKomodo\INIController\ObjectController"/>
+        <tag name="used-by" line="26" description="\SierraKomodo\INIController\StaticController"/>
+        <tag name="version" line="26" description="0.1.0-dev Currently in development; Not fully tested yet."/>
+      </docblock>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="33" package="SierraKomodo\INIController">
+        <name>$file</name>
+        <full_name>\SierraKomodo\INIController\Controller::file</full_name>
+        <default>''</default>
+        <docblock line="33">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="33" description="&lt;p&gt;Contains the filepath used in the last call to readFile()&lt;/p&gt;" type="string" variable="$file">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="40" package="SierraKomodo\INIController">
+        <name>$fileArray</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileArray</full_name>
+        <default>array()</default>
+        <docblock line="40">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="40" description="&lt;p&gt;Array containing the output of parse_ini_file generated in the last call to readFile()&lt;/p&gt;" type="array" variable="$fileArray">
+            <type>array</type>
+          </tag>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="46" package="SierraKomodo\INIController">
+        <name>$fileContent</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileContent</full_name>
+        <default>''</default>
+        <docblock line="46">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="46" description="&lt;p&gt;Contains the output of the last call to generateFile()&lt;/p&gt;" type="string" variable="$fileContent">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="64" package="SierraKomodo\INIController">
+        <name>readFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::readFile()</full_name>
+        <docblock line="64">
+          <description>Reads the specified file.</description>
+          <long-description>Reads the specified file, storing the file name in $this-&gt;file, output of parse_ini_file() in $this-&gt;fileArray,
+and then running $this-&gt;generateFile() afterwards.</long-description>
+          <tag name="param" line="64" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="64" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="64" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="64" description="If $this-&gt;file does not exist or is unreadable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="64" description="If parse_ini_file() fails to parse $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="109" package="SierraKomodo\INIController">
+        <name>writeFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::writeFile()</full_name>
+        <docblock line="109">
+          <description>Writes data stored in $this-&gt;fileArray into $this-&gt;file</description>
+          <long-description></long-description>
+          <tag name="param" line="109" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="109" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="109" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="109" description="If $this-&gt;file is not writable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="109" description="If file_put_contents() fails to write to $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="145" package="SierraKomodo\INIController">
+        <name>generateFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::generateFile()</full_name>
+        <docblock line="145">
+          <description>Generates a fully formatted INI string and stores it in $this-&gt;fileContent</description>
+          <long-description></long-description>
+          <tag name="return" line="145" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+      </method>
+    </class>
+    <source>eJztWG1rG0cQ/h7wf5gag+1gSyn9FlVpG9cJpmkakkIpdTGruzlr69Ou2N2zLIz+e2dm73R3OsmWEzc0kDOY02len33mRff9D9PxdOdJ/+nTnSfwFH5VPqCDJFfeQxirACrPwYYxPTx7ewaJNcHZPEfnQRuS0B6mKrlSlwgzTaJ4E9CkPTYmBn9URRhbBx80Oqd+sROb2vhFrhM0HuH1uzff8ZP+zhP+M2qCnkxiS+WcnJ8sfQ+i6H8W9O8sEc2NlUlz9NFiRrpI5iYTa47IFHk1KoesMEnQ1njIKFMWaXvtwZ+2gKmzIzXK55Basx9gpkyAYCHVDpOQz8VxQXiE2nlhyLWHuS32HYXqdNDmkj86sDPT8BCzjmlQjmEAZ4YwUalYtAar2CMoYh0jVuI3aorrxtEtE2zgQTcpen1pMJVs2f5oDslY52nLbmVTB0IqsJ6xASZYpj1CVk2X6feiy+pYNp99lGPdY/J7vlnw/LfRP2T6YzQ/BBV0sqp5TfyhU4ZnvW97z45TvIaTwjk0FD3Tih5gbqcTejCAt5RrVuT0TUA6iBTmGHolyyOQTeu39A1dkc98sTflwAfHB76X6RxFQWnj5Rz5yVSFcQRRSI1AdgMkzFQC2NHpvyKpg8Pa5ja517fPnz+GDWYtto304w0VRKADovhjgkPY3x9sQEKRq3mU+0lu4/8kYsIgCbuLMC0Cc32qnMcL+uZCTF+iQafClwfVw41UqW4DeQRxGNE9ONwEfpOG7IoY3mZjjXsH2/XhfAHYVIk2WNn83wTpPZ19BMJPMdGZ5t5IJnqVxL2SR4SxdRWNhbI8B5mte9yUj19EqU0EPzhcEZWTPVr6VdLc0YArjFRLKdoGBFRGDX+mXOq7oVNrdmqy5AJ9YiV4RU2u7zCnhnmNIC2JTr2agZJJWWE9+BkzVeTB85NGrLULh6FwBkbW0sxxBU8u8EWS0BCshcLY2ZmH85dUcOXgPSGynd4kOOUPcJbV4XHiDVfEdBpXNATBUNxdm+8LE/QE27Ya6qnFOMfwRhPJaf5pntKcHo123M5g5+gypXMBRb5ZD03Bc3Vbnu99qq7Q5yMNbFlk1dJUd9/loQ3ldErVcjbypTNoCJVSTQG+GlYaQA5qoUV9W9/1+7QxcWldq1ynigN7oF85cTA428zMg913XEPIy6rYmhREIqYTbUNslD0ZWw/3saJF1eG1toWnVWKEyGtGpmn52j1cnxLH+o32kVpV0Id3RbtK0YNdiW3/ttJe7K/nvTZKSpOZf184VYU8XkjlQlkZ3hRA64jfWNqIuSWoEHAyDXXNNRtWrbKnygG5UrJVGEcQqEs1PQtVSi1iSqZyjw/MlJoBlccyslbSxAdlloFulfMHpPOSTZi47TRj5RsZNpqbXMNlAQ3WSlUrQ0yyK9Ou/sHGWkt1QlIr3Z2ucgQwrqXy4u7h+wcvBvSjRAUlQzTueJ2I6bfM2qHzdb411cui4mVr+3nGmhfUOy+SuDL55kiTvW0jIJ93qpUr3Weaa/XG+nWwPeJgq7j56JOkMrxVVz01vnBY/tzhn/iQjJW5ROF8WQdSjHR/jS7Eji7LPcNRScRu85FNVDrfiin20p5hjFu3QusJ1uBSWR+Hnz66Zq3Q6EET8K0AfsQJ8bpEk2Zn+U4ms27CK0AqTbxEjlupDBAv76vMGmS6Q2Orji5thq5PXsEfamNdw/s/vNXY3DTXNdnbTn1s+H3eIdFJLL7y7ZGsAOuOvtahb1ElY+qKq/sDNaw9jzHI4QvYG+U2ueqUh+xbUWhM0KE7YkJoWgn4fW1O/W2lp3fz6Q1h96/bytfi73N3bnYHbbWO01N+UwsS+hXOh9TrC15WtBM+Iq82VErs37d164QlIUmTLEiKYqWT4h1h37LqYngbNRfrIl/ck8jLXJmrGChNhTDjwVBC4fsqSAflt8rlq6Z2q7sjtNVYHqntLP4FRxq2eQ==</source>
+  </file>
+  <file path="ObjectController.php" generated-path="ObjectController.html" hash="0134a2923e3c530660c3c606747c664e" package="Default">
+    <docblock line="0">
+      <description>API class that allows object/in memory usage of the master INI controller</description>
+      <long-description></long-description>
+      <tag name="author" line="0" description="SierraKomodo"/>
+      <tag name="license" line="0" description="GPL3" link="http://opensource.org/licenses/GPL-3.0"/>
+      <tag name="package" line="0" description="Default"/>
+    </docblock>
+    <namespace-alias name="Controller">\SierraKomodo\INIController\Controller</namespace-alias>
+    <class final="false" abstract="false" namespace="SierraKomodo\INIController" line="26" package="SierraKomodo\INIController">
+      <extends>\SierraKomodo\INIController\Controller</extends>
+      <name>ObjectController</name>
+      <full_name>\SierraKomodo\INIController\ObjectController</full_name>
+      <docblock line="26">
+        <description>API class that allows object/in memory usage of the master INI controller</description>
+        <long-description>Provides an object for loading INI files into memory. Methods in this class will read from and write to data stored
+in memory. INI files are only directly read or modified using the 'load' and 'save' methods.</long-description>
+        <tag name="api" line="26" description=""/>
+        <tag name="package" line="26" description="SierraKomodo\INIController"/>
+        <tag name="uses" line="26" description="" link="\SierraKomodo\INIController\Controller"/>
+        <tag name="version" line="26" description="0.1.0-dev Currently in development; Not fully tested yet."/>
+        <tag name="inherited_from" description="\SierraKomodo\INIController\Controller" refers="\SierraKomodo\INIController\Controller" link="/classes/SierraKomodo.INIController.Controller.html"/>
+      </docblock>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="33" package="SierraKomodo\INIController">
+        <name>$file</name>
+        <full_name>\SierraKomodo\INIController\Controller::file</full_name>
+        <default>''</default>
+        <docblock line="33">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="33" description="&lt;p&gt;Contains the filepath used in the last call to readFile()&lt;/p&gt;" type="string" variable="$file">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="33" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="40" package="SierraKomodo\INIController">
+        <name>$fileArray</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileArray</full_name>
+        <default>array()</default>
+        <docblock line="40">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="40" description="&lt;p&gt;Array containing the output of parse_ini_file generated in the last call to readFile()&lt;/p&gt;" type="array" variable="$fileArray">
+            <type>array</type>
+          </tag>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="40" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <property static="false" visibility="protected" namespace="SierraKomodo\INIController" line="46" package="SierraKomodo\INIController">
+        <name>$fileContent</name>
+        <full_name>\SierraKomodo\INIController\Controller::fileContent</full_name>
+        <default>''</default>
+        <docblock line="46">
+          <description></description>
+          <long-description></long-description>
+          <tag name="var" line="46" description="&lt;p&gt;Contains the output of the last call to generateFile()&lt;/p&gt;" type="string" variable="$fileContent">
+            <type>string</type>
+          </tag>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="used-by" line="46" description="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="32" package="SierraKomodo\INIController">
+        <name>__construct</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::__construct()</full_name>
+        <docblock line="32">
+          <description>ObjectController constructor.</description>
+          <long-description></long-description>
+          <tag name="param" line="32" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="45" package="SierraKomodo\INIController">
+        <name>load</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::load()</full_name>
+        <docblock line="45">
+          <description>Loads the specified INI file into memory.</description>
+          <long-description></long-description>
+          <tag name="param" line="45" description="&lt;p&gt;The INI file to load into memory. Defaults to the last INI file that was loaded into memory or written to.&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="45" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="45" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="59" package="SierraKomodo\INIController">
+        <name>save</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::save()</full_name>
+        <docblock line="59">
+          <description>Saves the INI data currently in memory to the specified file.</description>
+          <long-description></long-description>
+          <tag name="param" line="59" description="&lt;p&gt;The INI file to save data to. Defaults to the last INI file that was loaded into memory or written to.&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="59" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="59" description="" link="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="75" package="SierraKomodo\INIController">
+        <name>set</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::set()</full_name>
+        <docblock line="75">
+          <description>Adds/sets a key=value pair in memory</description>
+          <long-description></long-description>
+          <tag name="param" line="75" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="75" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="75" description="" type="string" variable="$parValue">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="75" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="75" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parValue</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="95" package="SierraKomodo\INIController">
+        <name>fetch</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::fetch()</full_name>
+        <docblock line="95">
+          <description>Fetches the data from memory.</description>
+          <long-description>This method can be used to retrieve the entirety of the INI data as a multi-level associative array, an entire INI section as an associative array, or a specific key=value pair.</long-description>
+          <tag name="param" line="95" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="95" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="95" description="Returns one of four things: 1, if Section is ommitted/null, returns the entire associative array of INI entries loaded in memory in the format of $array['Section]['Key'] = 'Value'; 2, if Key is ommitted/null, returns the entire associative array of a specific INI section in the format of $array['Key'] = 'Value'; 3, returns a string containing the value of a requested key; 4, in any of the previous situations, returns 'false' if there was no entry for the section and/or key." type="array|boolean|string">
+            <type>array</type>
+            <type>boolean</type>
+            <type>string</type>
+          </tag>
+          <tag name="uses" line="95" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="123" package="SierraKomodo\INIController">
+        <name>delete</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::delete()</full_name>
+        <docblock line="123">
+          <description>Deletes a key=value pair from memory</description>
+          <long-description></long-description>
+          <tag name="param" line="123" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="123" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="123" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="123" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parKey</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="64" package="SierraKomodo\INIController">
+        <name>readFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::readFile()</full_name>
+        <docblock line="64">
+          <description>Reads the specified file.</description>
+          <long-description>Reads the specified file, storing the file name in $this-&gt;file, output of parse_ini_file() in $this-&gt;fileArray,
+and then running $this-&gt;generateFile() afterwards.</long-description>
+          <tag name="param" line="64" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="64" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="64" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="64" description="If $this-&gt;file does not exist or is unreadable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="64" description="If parse_ini_file() fails to parse $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="64" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="109" package="SierraKomodo\INIController">
+        <name>writeFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::writeFile()</full_name>
+        <docblock line="109">
+          <description>Writes data stored in $this-&gt;fileArray into $this-&gt;file</description>
+          <long-description></long-description>
+          <tag name="param" line="109" description="&lt;p&gt;Full/relative path to the INI file to read. Defaults to $this-&gt;file&lt;/p&gt;" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="109" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="throws" line="109" description="If $parFile and $this-&gt;file are both null" type="\BadFunctionCallException">
+            <type>\BadFunctionCallException</type>
+          </tag>
+          <tag name="throws" line="109" description="If $this-&gt;file is not writable" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="throws" line="109" description="If file_put_contents() fails to write to $this-&gt;file" type="\RuntimeException">
+            <type>\RuntimeException</type>
+          </tag>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$file"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="uses" line="109" description="" link="\SierraKomodo\INIController\Controller::generateFile()"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default>null</default>
+          <type>string</type>
+        </argument>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="SierraKomodo\INIController" line="145" package="SierraKomodo\INIController">
+        <name>generateFile</name>
+        <full_name>\SierraKomodo\INIController\Controller::generateFile()</full_name>
+        <docblock line="145">
+          <description>Generates a fully formatted INI string and stores it in $this-&gt;fileContent</description>
+          <long-description></long-description>
+          <tag name="return" line="145" description="True on success" type="boolean">
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+          <tag name="uses" line="145" description="" link="\SierraKomodo\INIController\Controller::$fileContent"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="used-by" line="145" description="\SierraKomodo\INIController\Controller::writeFile()"/>
+        </docblock>
+        <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
+      </method>
+    </class>
+    <source>eJzVVl1PG0cUfUfiP9wHJAdk7KTpE27aRolSoXyhgNoHiKJh9y5MszvjzszatRr+e8+d/TQGY2jSqo6UbHbv9zn3zPzw0/Ryur013tvb3qI9en50SEmuvKdwqQKpPLdzT/b8d07CWBsquLBuQaVXF0w2gxVToXxgR4fv4GpNcDbP2Um0GPFnVYZL6+hYs3PqtS1saqsPuU7YeKZfjt48lTfj7S35Y1TBfqoSXnI5Q/gXbfSJGJZ+nclZ90jK0zXfb9nxkbMznbInZeo4lGEAuVWpNhfRK9M5vmsTbB1/RG8ZY0rlJVJoX9c013lOjlVKmbMFIqY0dzowwTNVQZEP1nEa87bFjno5lEPVJl9Qqh0qwUOMhnowMp1pTtGalCV9DaTGQcwy8GrGAwSMVY16cE519QCIPstMboegsgNMns42AqpymLHz2hp6PHoyeryf8oxelM6xkeLRI15wbqcFXkzoncVwyxxfAgOTlBYcRjWZqgm+jwj0yMB/BjZpnxHbW3/BBb+KE/LbW/UD0j64MsHAR60VpuBUARSczHAH/3uFsTefx9XDtDwH11GnSYI09ulTG+tR40LPyKCP3cqjrkd+O8KG/R8FmdZ4d1J9v6r+6f/db+ENfHwE1k85qcBumLFEvsbjjrboBKHaAHCXopZZ/JIzVebBy1dJDAhCz0U2bI5tFEdechVGCrOBDXx7A3YcSmfo3NqcTlwpbCZfJgl73xndg2MHB7IA0s6j3TtwWpr5rQCNx/RBVkravdAz1C+9jgh+oGiXDtIijwu6xH7JasrqynghOZgEJKJQMe2cKZG1Vee2hCCFSg98wLJ1Weux1OxoW7onQ46x5BVDBKMoKEl/12psajA7FsUOH8oaUZYqF4D+XzAmSu5GlJHeNqLMb42KS89Zpxkr0Ha574nt8zT1Y8+YrKLPvHg2UzlmMVXadchuAOExx87WWLzmxZqvv0rarw3OccCqJH2IdmSGz2G/uAshrkS37mvYtDDsqr0RsGMOESvDc5r1eqJWotsKTnvxP57W8T+CDW2GSee8lOTQpDpRIMbySDpS4NDgzeB/xSG5rJc7Llu8QNwm+CciMdVhD/EBPoxrAfYNBEVmp3HmxkhQBtwjwqK5CbWyoYRmBRZZ7+dyQOOFt4kGTPBUMpWh3Icq/+jmqwFFT3OTOfZbNZqTXKPwJuJzT+bWE47Jvwg/v9SWH+IH3AlNvABmtnQiyebCH9CTIemM6kyEGdqiEElKx7L5wxo235vdaqcSVAaC7xh0T+oaoYtXQqbqhBDrneh3Omg5NkAnA2HYINJrMKHvYmF4/Q+K6k2/D9it5awU8bTLpZq5y4VZadNcOStIYzLHf5TVJQ5YT+j7oWRSpuXa1PFM2xJHoQ5lPCp9F3+QqdzjwqqjLTqSQ8PYONRFvH/HE6zhnEnHeIU8o39HdTLZxr7u1GdDKz+3nhVoaNmvNuzbrJ4abV09pbkixoiaeDHnLbHERvuolOukbXfFcU0hS56TZbeqsjXBIrjXna539sAuWoF+eDttiK/d10ZK/5JzDnzDMd9T/G8ml//dQZ7Gtm88y9ddvA6z1grKWO1gFaqvh7VQjOi9qMlce16y6p9Ko9VdXbdbpbl7r1aW9gFBOlpPVgjV8agZyv3uHVd/A0Rdip0=</source>
+  </file>
+  <package name="Default" full_name="Default"/>
+  <package name="SierraKomodo" full_name="SierraKomodo">
+    <package name="INIController" full_name="SierraKomodo\INIController"/>
+  </package>
+  <package name="global" full_name="global"/>
+  <namespace name="SierraKomodo" full_name="SierraKomodo">
+    <namespace name="INIController" full_name="SierraKomodo\INIController"/>
+  </namespace>
+  <deprecated count="0"/>
+</project>

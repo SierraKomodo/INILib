@@ -61,7 +61,7 @@ class Controller
      * @uses \SierraKomodo\INIController\Controller::$fileArray
      * @uses \SierraKomodo\INIController\Controller::generateFile()
      */
-    protected function readFile($parFile = null)
+    protected function readFile(string $parFile = null): bool
     {
         if ($parFile == null) {
             $parFile = $this->file;
@@ -106,7 +106,7 @@ class Controller
      * @uses \SierraKomodo\INIController\Controller::$fileContent
      * @uses \SierraKomodo\INIController\Controller::generateFile()
      */
-    protected function writeFile($parFile = null)
+    protected function writeFile(string $parFile = null): bool
     {
         if ($parFile == null) {
             $parFile = $this->file;
@@ -142,7 +142,7 @@ class Controller
      * @used-by \SierraKomodo\INIController\Controller::readFile()
      * @used-by \SierraKomodo\INIController\Controller::writeFile()
      */
-    protected function generateFile()
+    protected function generateFile(): bool
     {
         $this->fileContent = '';
         

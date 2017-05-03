@@ -26,10 +26,10 @@ use SierraKomodo\INIController\Controller as Controller;
 class ObjectController extends Controller
 {
     /**
-     * ObjectController constructor.
+     * ObjectController constructor. Alias of self::load()
      * @param string $parFile
      */
-    public function __construct($parFile = null)
+    public function __construct(string $parFile = null)
     {
         $this->load($parFile);
     }
@@ -42,7 +42,7 @@ class ObjectController extends Controller
      * @return bool True on success
      * @uses \SierraKomodo\INIController\Controller::readFile()
      */
-    public function load($parFile = null)
+    public function load(string $parFile = null): bool
     {
         // Read the given file. parent::readFile already handles storing all information we care about at this stage
         return $this->readFile($parFile);
@@ -56,7 +56,7 @@ class ObjectController extends Controller
      * @return bool True on success
      * @uses \SierraKomodo\INIController\Controller::writeFile()
      */
-    public function save($parFile = null)
+    public function save(string $parFile = null): bool
     {
         // Write to the file
         return $this->writeFile($parFile);
@@ -70,9 +70,9 @@ class ObjectController extends Controller
      * @param string $parKey
      * @param string $parValue
      * @return bool True on success
-     * @uses \SierraKomodo\INIController\StaticController::$fileArray
+     * @uses \SierraKomodo\INIController\Controller::$fileArray
      */
-    public function set($parSection, $parKey, $parValue)
+    public function set(string $parSection, string $parKey, string $parValue): bool
     {
         // Set the new value
         $this->fileArray[$parSection][$parKey] = $parValue;
@@ -83,31 +83,48 @@ class ObjectController extends Controller
     
     
     /**
-     * Fetches the data from memory.
+     * Fetches the full INI file from memory as a multi-level associative array
      *
-     * This method can be used to retrieve the entirety of the INI data as a multi-level associative array, an entire INI section as an associative array, or a specific key=value pair.
+     * @return array In the format of $array['Section']['Key'] = 'Value'
+     * @uses \SierraKomodo\INIController\Controller::$fileArray
+     */
+    public function fetchFile(): array
+    {
+        return $this->fileArray;
+    }
+    
+    
+    /**
+     * Fetches an INI section from memory as an associative array
+     *
+     * @param string $parSection
+     * @return array|bool In the format of $array['Key'] = 'Value'. Returns boolean 'FALSE' if no matching section was found
+     * @uses \SierraKomodo\INIController\Controller::$fileArray
+     */
+    public function fetchSection(string $parSection)
+    {
+        if (isset($this->fileArray[$parSection])) {
+            return $this->fileArray[$parSection];
+        } else {
+            return false;
+        }
+    }
+    
+    
+    /**
+     * Fetches a value from a key=value pair
      *
      * @param string $parSection
      * @param string $parKey
-     * @return array|bool|string Returns one of four things: 1, if Section is ommitted/null, returns the entire associative array of INI entries loaded in memory in the format of $array['Section]['Key'] = 'Value'; 2, if Key is ommitted/null, returns the entire associative array of a specific INI section in the format of $array['Key'] = 'Value'; 3, returns a string containing the value of a requested key; 4, in any of the previous situations, returns 'false' if there was no entry for the section and/or key.
-     * @uses \SierraKomodo\INIController\StaticController::$fileArray
+     * @return string|bool Returns the value of a key=value pair OR boolean 'FALSE' if no matching entry was found
+     * @uses \SierraKomodo\INIController\Controller::$fileArray
      */
-    public function fetch($parSection = null, $parKey = null)
+    public function fetchKey(string $parSection, string $parKey)
     {
-        if ($parSection == null) {
-            return $this->fileArray;
-        } elseif ($parKey == null) {
-            if (isset($this->fileArray[$parSection])) {
-                return $this->fileArray[$parSection];
-            } else {
-                return false;
-            }
+        if (isset($this->fileArray[$parSection][$parKey])) {
+            return $this->fileArray[$parSection][$parKey];
         } else {
-            if (isset($this->fileArray[$parSection][$parKey])) {
-                return $this->fileArray[$parSection][$parKey];
-            } else {
-                return false;
-            }
+            return false;
         }
     }
     
@@ -118,9 +135,9 @@ class ObjectController extends Controller
      * @param string $parSection
      * @param string $parKey
      * @return bool True on success
-     * @uses \SierraKomodo\INIController\StaticController::$fileArray
+     * @uses \SierraKomodo\INIController\Controller::$fileArray
      */
-    public function delete($parSection, $parKey = null)
+    public function delete(string $parSection, string $parKey = null): bool
     {
         // If $parKey is null, delete the entire section. Otherwise, delete the specific key.
         if ($parKey == null) {

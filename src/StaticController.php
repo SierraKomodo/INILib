@@ -47,7 +47,7 @@ class StaticController extends Controller
      * @uses \SierraKomodo\INIController\Controller::readFile()
      * @uses \SierraKomodo\INIController\Controller::writeFile()
      */
-    public static function set($parFile, $parSection, $parKey, $parValue)
+    public static function set(string $parFile, string $parSection, string $parKey, string $parValue): bool
     {
         // Read the INI file
         self::readFile($parFile);
@@ -61,16 +61,55 @@ class StaticController extends Controller
     
     
     /**
+     * Fetches the full INI file as a multi-level associative array
+     *
+     * @param string $parFile
+     * @return array In the format of $array['Section']['Key'] = 'Value'
+     * @uses \SierraKomodo\INIController\StaticController::$fileArray
+     */
+    public static function fetchFile(string $parFile): array
+    {
+        // Read the INI file
+        self::readFile($parFile);
+        
+        // Return the full array
+        return self::$fileArray;
+    }
+    
+    
+    /**
+     * Fetches an INI section from a file as an associative array
+     *
+     * @param string $parFile
+     * @param string $parSection
+     * @return array|bool In the format of $array['Key'] = 'Value'. Returns boolean 'FALSE' if no matching section was found
+     * @uses \SierraKomodo\INIController\StaticController::$fileArray
+     */
+    public static function fetchSection(string $parFile, string $parSection)
+    {
+        // Read the INI file
+        self::readFile($parFile);
+        
+        // Return the section, or false if the section doesn't exist
+        if (isset(self::$fileArray[$parSection])) {
+            return self::$fileArray[$parSection];
+        } else {
+            return false;
+        }
+    }
+    
+    
+    /**
      * Fetches the value of a requested key=value pair from an INI file.
      *
      * @param string $parFile
      * @param string $parSection
      * @param string $parKey
-     * @return bool|string The value of the requested key=value pair, or FALSE if no matching entry was found.
+     * @return bool|string The value of the requested key=value pair, OR boolean 'FALSE' if no matching entry was found.
      * @uses \SierraKomodo\INIController\StaticController::$fileArray
      * @uses \SierraKomodo\INIController\Controller::readFile()
      */
-    public static function fetch($parFile, $parSection, $parKey)
+    public static function fetchKey(string $parFile, string $parSection, string $parKey)
     {
         // Read the INI file
         self::readFile($parFile);

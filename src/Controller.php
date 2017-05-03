@@ -116,7 +116,7 @@ class Controller
         if ($parFile == null) {
             throw new \BadFunctionCallException("Parameter File must not be null if no filepath has previously been defined");
         }
-        if (!is_writable($parFile)) {
+        if (file_exists($parFile) and !is_writable($parFile)) {
             throw new \RuntimeException("File '{$parFile}' is not writable");
         }
         

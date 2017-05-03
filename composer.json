@@ -17,10 +17,11 @@
     "source": "https://github.com/SierraKomodo/INIController"
   },
   "require": {
-    "php": ">=5.6.0"
+    "php": ">=7.0.0"
   },
   "require-dev": {
-    "phpdocumentor/phpdocumentor": "2.*"
+    "phpdocumentor/phpdocumentor": "2.*",
+    "phpunit/phpunit": "^6.1"
   },
   "autoload": {
     "psr-4": {

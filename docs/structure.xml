@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project title="API Documentation" version="2.8.5">
   <partials/>
-  <file path="StaticController.php" generated-path="StaticController.html" hash="bde7902359cf3a10f30326fce5bd8b32" package="Default">
+  <file path="StaticController.php" generated-path="StaticController.html" hash="7447a6cb55c40b977b46312e3a0a12a1" package="Default">
     <docblock line="0">
       <description>API class that allows static usage of the master INI controller</description>
       <long-description></long-description>
@@ -129,27 +129,76 @@ write to INI files.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="73" package="SierraKomodo\INIController">
-        <name>fetch</name>
-        <full_name>\SierraKomodo\INIController\StaticController::fetch()</full_name>
-        <docblock line="73">
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="70" package="SierraKomodo\INIController">
+        <name>fetchFile</name>
+        <full_name>\SierraKomodo\INIController\StaticController::fetchFile()</full_name>
+        <docblock line="70">
+          <description>Fetches the full INI file as a multi-level associative array</description>
+          <long-description></long-description>
+          <tag name="param" line="70" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="70" description="In the format of $array['Section']['Key'] = 'Value'" type="array">
+            <type>array</type>
+          </tag>
+          <tag name="uses" line="70" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="88" package="SierraKomodo\INIController">
+        <name>fetchSection</name>
+        <full_name>\SierraKomodo\INIController\StaticController::fetchSection()</full_name>
+        <docblock line="88">
+          <description>Fetches an INI section from a file as an associative array</description>
+          <long-description></long-description>
+          <tag name="param" line="88" description="" type="string" variable="$parFile">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="88" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="88" description="In the format of $array['Key'] = 'Value'. Returns boolean 'FALSE' if no matching section was found" type="array|boolean">
+            <type>array</type>
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="88" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parFile</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="112" package="SierraKomodo\INIController">
+        <name>fetchKey</name>
+        <full_name>\SierraKomodo\INIController\StaticController::fetchKey()</full_name>
+        <docblock line="112">
           <description>Fetches the value of a requested key=value pair from an INI file.</description>
           <long-description></long-description>
-          <tag name="param" line="73" description="" type="string" variable="$parFile">
+          <tag name="param" line="112" description="" type="string" variable="$parFile">
             <type>string</type>
           </tag>
-          <tag name="param" line="73" description="" type="string" variable="$parSection">
+          <tag name="param" line="112" description="" type="string" variable="$parSection">
             <type>string</type>
           </tag>
-          <tag name="param" line="73" description="" type="string" variable="$parKey">
+          <tag name="param" line="112" description="" type="string" variable="$parKey">
             <type>string</type>
           </tag>
-          <tag name="return" line="73" description="The value of the requested key=value pair, or FALSE if no matching entry was found." type="boolean|string">
+          <tag name="return" line="112" description="The value of the requested key=value pair, OR boolean 'FALSE' if no matching entry was found." type="boolean|string">
             <type>boolean</type>
             <type>string</type>
           </tag>
-          <tag name="uses" line="73" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
-          <tag name="uses" line="73" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="uses" line="112" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="112" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$parFile</name>
@@ -167,27 +216,27 @@ write to INI files.</long-description>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="98" package="SierraKomodo\INIController">
+      <method final="false" abstract="false" static="true" visibility="public" namespace="SierraKomodo\INIController" line="137" package="SierraKomodo\INIController">
         <name>delete</name>
         <full_name>\SierraKomodo\INIController\StaticController::delete()</full_name>
-        <docblock line="98">
+        <docblock line="137">
           <description>Deletes a key=value pair from an INI file.</description>
           <long-description></long-description>
-          <tag name="param" line="98" description="" type="string" variable="$parFile">
+          <tag name="param" line="137" description="" type="string" variable="$parFile">
             <type>string</type>
           </tag>
-          <tag name="param" line="98" description="" type="string" variable="$parSection">
+          <tag name="param" line="137" description="" type="string" variable="$parSection">
             <type>string</type>
           </tag>
-          <tag name="param" line="98" description="" type="string" variable="$parKey">
+          <tag name="param" line="137" description="" type="string" variable="$parKey">
             <type>string</type>
           </tag>
-          <tag name="return" line="98" description="True on success" type="boolean">
+          <tag name="return" line="137" description="True on success" type="boolean">
             <type>boolean</type>
           </tag>
-          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
-          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
-          <tag name="uses" line="98" description="" link="\SierraKomodo\INIController\Controller::writeFile()"/>
+          <tag name="uses" line="137" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="137" description="" link="\SierraKomodo\INIController\Controller::readFile()"/>
+          <tag name="uses" line="137" description="" link="\SierraKomodo\INIController\Controller::writeFile()"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$parFile</name>
@@ -287,9 +336,9 @@ and then running $this-&gt;generateFile() afterwards.</long-description>
         <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
       </method>
     </class>
-    <source>eJzlVt9P2zAQfkfif7iHSaOotEx7K5u2ahsTAm2Iou0BeDDJZbVw7cx22lUb//vu7DRJAwT2S5u0IFUhPn++77v7bD97kU/zzY3h9vbmBmzD+PgAEiWcAz8VHoRSZuHAeeFlAoUTnxBMRmMIM+E8Wjh4RxOM9tYohZYxAs5LUfipsTCRaK04NDOTmjigZILaIbw9PnrKX4abG/ynxQxdLhJcm3JO8K8q9D0OLFxXyHn9CsJBa+7v53lszVym6ECsJktN4RkTyYh/Ki0mnkC0zAtFAUYzMKNlUqEbwFgpmCGJlTqaS0tKV2YW56olWBQpZNbMQOg0LLuw0iN40wBqSJ/L+EJyXjGTu+WKcSSpg/MHiRonzNE6ZrI7eDLY3UlxDq8Ka1FzssSBPqAy+Yw+7ME74yErFI14JCVTWKIflIWPPCdBuEbh8ItHnTart7nxlabQE+vHD6chqMiU8xIesQbj8Bp/uVRCaqk/hSKyTKnwIqroUGWjEau6T9O2egNeiThxdqRpVcrcmpy+LkMlSaRqZeJYhmSFTrioQf8yLYpMdy6XnYq2OY9GDv1W71dBMvTJ9NdhUlToscYZxhfSw1NHkkol+4bsz2Mltnp7Mbb52yzaOE3dkLgGx+SYyEwS3hUun8+FKhByIW0ogq56u5K2ppULK6iO3nKBH9F/XMiO4QmGKnVEHOKyY/QD51aPW/SF1XBpjIJTS1mTF1yRJOjcmvTdrrqpe63nD8A0Aeqe/kmAsLGsI6yKX1zS1t3ue+C2XRWg39S6v5K1XytYYpZeDq0xhBPe3VYmzeo60tMy6mqdVY/VHVZCTdAHJI2LVku1MWulzxo5X5yVOV9QP1dZ37Xax9UmzEuuJ142SFyr1rRN4LrbK/vsZnQBP1Kho0MQ+OcibqUt25RHxF80TsMY38qY02byzOSu9PtAu+z++GjyBmQG2tChSfQZgs4Ru4QFneeZKXQ6+Nc81u2QuCd3e+RPG+Mk1oXBbhE9E4ouVTKWJ4qdGnT6saejWDpfQ1HMlnTs+YfZqNdrcrrhjPumN+hcA3KSt6MFAs3gB9nrdTjl+CD6l330vx8w5V2k2z+0XWu6Y/5pGx1k1YJ0S+cV+9SCMzPHsMBiahQSaMhtAO/pm11Ih1WQ0XQNru49CffdYN1cFZ+SULvhC32v+Xr3uuYBILWDb9rqhiy/5SC8/g7ITnDj</source>
+    <source>eJzlV9tu20YQfTfgf5gHA7IMmUrRN7lBKqR1YSRIDCtoHmw/rMlhtMhql91dShEa/3tnL7yIjumb7BaoDAg0uTs755w5w9Evb4p5sbszPjjY3YEDmJ6eQCqYMWDnzAITQq0MGMssT6E07AuCyukZwoIZixpOPtAGJa1WQqB2MXycX1lp50rDjKPW7J1aqEyFB4KnKA3CH6fvf3Z3xrs77k+yBZqCpbix5YLCv62jH7mFpelbctFcAjPQ2bt9nKdaLXmGBli1mUtanjsgOeHPuMbUUhDJi1LQAiVdYBct5wJNAlMhYIFEVmZoLx3JTcws7BVr0MgyyLVaAJOZP3aluUWwqhWoRX3BwwXR+dUhuZ2usI4oNXBxL1LDhiVq45C8Sn5KXh1muIS3pdYoXbKEgW6gUMWCbhzBB2UhLwU9sUhMZrBGm0ThA86ZJ64lHH6zKLO2ers7f9MW+gT93MelwUhkynkNe46Dqb8M304qxiWXX7yIjqaMWRZYNCjyycSxekzb9oeJO4kwueyI01rKQquC7q69kkRSfTJhjEvyUqZOVM9/TItWZodX615Gu5gnE4N2f/jUIDnadP70MBkKtNjEGYcL4sNSRRJLEX2L9tdBif3hUVjb/m6LNs0yMyas3jEFpjznFO8rrl8vmSgRCsa1F0HWtV1T28AqmGako9VO4D36zwnZ83iGXqWeFe9w3fP0T5db81yjLbWEK6UEfNKUNXnBlGmKxmxQ3++qm7w3fD4gTDtAU9OPDOAby2aESvzyilp3t+7BlW1Hh9EPmB91uB7dYHc48XyGw6LbffGM4cz1v8rGeaM0fTpWrlKoqrCpwRhqhtZHkrjqFF03ZqPFeQvH5XkEcEkVX+d+22mfqzbtjtxMPJZQOKthvQvgut9Nx87vaEJ8arI1Q+7lx2BRCssPhWvHdMOolJN4SwxWfbCrYsqh457IcKjSC3p/0ittz98/H0SiBpfnA6Jp4HgaeJIGW7ZGf136Tugp7eChOmvBf7ZCOwtk1cK0Ke/K32B7mOqxRxqMkP2E0Mgvt6D53Z20XRXffUe8tTQ69ZBEkow3PlK+g+Pp+9nvA+A5SEVDE8F051YAV4QqV6WfgV64kiLs+7S64ctVlqmaK80nORM0GfO8/QAyhUYOLE1U3NgmCq3a58a37r5eNxy2UfSU7cauVt7XgC6pHwfxCbcXP7jjheZNBcYo5l9lGC87o0Qcm//FYaI1LHyPaz61k3dIbkt/BB/P7nIHTdl63Xgj2bI5njyB3MNdxNdjhogXdFpXlq7hgghPs1s9WjzOd/X25zXgb/63gZsu/stO+7+P5fEXXOOmDRtF5uhVLGk2eW4bneT1gdz4E0dUggtFQ4k7YDWn9la9sRL4SPf0ihusFykp1s2vxdTVXbJprhpPBNQt+FLe/a670zX3CNI4+KatbtCylR8H1/8AqLr83Q==</source>
   </file>
-  <file path="Controller.php" generated-path="Controller.html" hash="204e513c23f452039c4ee6366b41a974" package="Default">
+  <file path="Controller.php" generated-path="Controller.html" hash="f52524b2a1a75c20506b200fa11cae02" package="Default">
     <docblock line="0">
       <description>Master class that all other INI controllers in this package will extend.</description>
       <long-description></long-description>
@@ -434,9 +483,9 @@ and then running $this-&gt;generateFile() afterwards.</long-description>
         </docblock>
       </method>
     </class>
-    <source>eJztWG1rG0cQ/h7wf5gag+1gSyn9FlVpG9cJpmkakkIpdTGruzlr69Ou2N2zLIz+e2dm73R3OsmWEzc0kDOY02len33mRff9D9PxdOdJ/+nTnSfwFH5VPqCDJFfeQxirACrPwYYxPTx7ewaJNcHZPEfnQRuS0B6mKrlSlwgzTaJ4E9CkPTYmBn9URRhbBx80Oqd+sROb2vhFrhM0HuH1uzff8ZP+zhP+M2qCnkxiS+WcnJ8sfQ+i6H8W9O8sEc2NlUlz9NFiRrpI5iYTa47IFHk1KoesMEnQ1njIKFMWaXvtwZ+2gKmzIzXK55Basx9gpkyAYCHVDpOQz8VxQXiE2nlhyLWHuS32HYXqdNDmkj86sDPT8BCzjmlQjmEAZ4YwUalYtAar2CMoYh0jVuI3aorrxtEtE2zgQTcpen1pMJVs2f5oDslY52nLbmVTB0IqsJ6xASZYpj1CVk2X6feiy+pYNp99lGPdY/J7vlnw/LfRP2T6YzQ/BBV0sqp5TfyhU4ZnvW97z45TvIaTwjk0FD3Tih5gbqcTejCAt5RrVuT0TUA6iBTmGHolyyOQTeu39A1dkc98sTflwAfHB76X6RxFQWnj5Rz5yVSFcQRRSI1AdgMkzFQC2NHpvyKpg8Pa5ja517fPnz+GDWYtto304w0VRKADovhjgkPY3x9sQEKRq3mU+0lu4/8kYsIgCbuLMC0Cc32qnMcL+uZCTF+iQafClwfVw41UqW4DeQRxGNE9ONwEfpOG7IoY3mZjjXsH2/XhfAHYVIk2WNn83wTpPZ19BMJPMdGZ5t5IJnqVxL2SR4SxdRWNhbI8B5mte9yUj19EqU0EPzhcEZWTPVr6VdLc0YArjFRLKdoGBFRGDX+mXOq7oVNrdmqy5AJ9YiV4RU2u7zCnhnmNIC2JTr2agZJJWWE9+BkzVeTB85NGrLULh6FwBkbW0sxxBU8u8EWS0BCshcLY2ZmH85dUcOXgPSGynd4kOOUPcJbV4XHiDVfEdBpXNATBUNxdm+8LE/QE27Ya6qnFOMfwRhPJaf5pntKcHo123M5g5+gypXMBRb5ZD03Bc3Vbnu99qq7Q5yMNbFlk1dJUd9/loQ3ldErVcjbypTNoCJVSTQG+GlYaQA5qoUV9W9/1+7QxcWldq1ynigN7oF85cTA428zMg913XEPIy6rYmhREIqYTbUNslD0ZWw/3saJF1eG1toWnVWKEyGtGpmn52j1cnxLH+o32kVpV0Id3RbtK0YNdiW3/ttJe7K/nvTZKSpOZf184VYU8XkjlQlkZ3hRA64jfWNqIuSWoEHAyDXXNNRtWrbKnygG5UrJVGEcQqEs1PQtVSi1iSqZyjw/MlJoBlccyslbSxAdlloFulfMHpPOSTZi47TRj5RsZNpqbXMNlAQ3WSlUrQ0yyK9Ou/sHGWkt1QlIr3Z2ucgQwrqXy4u7h+wcvBvSjRAUlQzTueJ2I6bfM2qHzdb411cui4mVr+3nGmhfUOy+SuDL55kiTvW0jIJ93qpUr3Weaa/XG+nWwPeJgq7j56JOkMrxVVz01vnBY/tzhn/iQjJW5ROF8WQdSjHR/jS7Eji7LPcNRScRu85FNVDrfiin20p5hjFu3QusJ1uBSWR+Hnz66Zq3Q6EET8K0AfsQJ8bpEk2Zn+U4ms27CK0AqTbxEjlupDBAv76vMGmS6Q2Orji5thq5PXsEfamNdw/s/vNXY3DTXNdnbTn1s+H3eIdFJLL7y7ZGsAOuOvtahb1ElY+qKq/sDNaw9jzHI4QvYG+U2ueqUh+xbUWhM0KE7YkJoWgn4fW1O/W2lp3fz6Q1h96/bytfi73N3bnYHbbWO01N+UwsS+hXOh9TrC15WtBM+Iq82VErs37d164QlIUmTLEiKYqWT4h1h37LqYngbNRfrIl/ck8jLXJmrGChNhTDjwVBC4fsqSAflt8rlq6Z2q7sjtNVYHqntLP4FRxq2eQ==</source>
+    <source>eJztWG1rG0cQ/h7If5gagy3jSCn9FlVpGzcJJmka4kIpdTGruzlr69Ou2N2zIoz+e2dm73R3OsmREyc0kDOY02len33mRffjT7PJ7OGDwdHRwwdwBL8pH9BBkivvIUxUAJXnYMOEHp6+OYXEmuBsnqPzoA1JaA8zlVypS4S5JlF8H9CkfTYmBn9WRZhYB2canVOv7NSmNn6R6wSNR3j59vUP/GTw8AH/GTVFTyaxpXJOzk9WvodR9LMF/QdLRHMTZdIcfbSYkS6SuenUmmMyRV6NyiErTBK0NR4yypRF2l778JctYObsWI3zBaTWHASYKxMgWEi1wyTkC3FcEB6hdl4Ycu1hYYsDR6E6HbS55I8O7Nw0PMSsYxqUYxjCqSFMVCoWrcEq9giKWMeIlfiNmuK6cXSrBBt40E2KXl8aTCVbtj9eQDLRedqyW9nUgZAKrGdsgCmWaY+RVdNV+v3osjqW7Wcf5Vj3Efk93y54/vv4XzL9MZpnQQWdrGteE3/olOFx//v+40cpXsNJ4Rwaip5pRQ8wt7MpPRjCG8o1K3L6JiAdRAoLDP2S5RHIpvUb+oauyGe+2Jty4IPjA9/PdI6ioLTxco78ZKbCJIIopEYguwESZioB7Oj0X5DUYa+2uUvu9e2TJ/dhg1mLbSODeEMFEeiAKP6Y4AgODoZbkFDkahHlfpHb+D+JmDBIwu4izIrAXJ8p5/GCvrkQ05do0Knw9UF1dyNVqrtAHkEcRXQPe9vAb9KQXRHD22ysce9guzmcrwCbKtEGK5v/myC9o7OPQPgZJjrT3BvJRL+S+KDkMWFsXUVjoSzPQWbrPjflR0+j1DaCH/bWROVkj1d+lTR3NOAKI9VSirYBAZVRw58rl/pu6NSanZquuECfWAleUJMbOMypYV4jSEuiU69moGRSVlgffsVMFXnw/KQRa+3CYSicgbG1NHNcwZMLfJEkNARroTBxdu7h/BkVXDl4T4hsz98nOOMPcJrV4XHiDVfEdBpXNATBUNxdm+8KE/QU27Ya6qnFOMfwvSaS0/zTPKU5PRrtuJvBztFlSucCinyzGZqC5+quPN//VF2hz0ca2LHIqqWp7r7r1BrJIfWeCB+iejko+dIZHNaipWxTgK+GrQaqw1poWd/Wd4MBrU9cZ9cq16niKO/oV44fDM630/Rw7y0XFPLmKramBTGKuUWrERtlT8bWk36iaGt1eK1t4WmvGCPyzpFp2sT2eptT4li/0z7yrAq6d1u063w93JPYDm4q7eXB5iLQRkmdchl8KJyqXO4vpHK7rAxvC6B1xK8trcfcH1QIOJ2FugCb3atW2VfltFyr3yqMYwjUspqehSqlFjElU7nHO2ZKnYFqZRVZK2nigzKrQHfK+QzpvGQtJm47zVj5RoaNTifXaFVAw41S1f4Qk+zKtFvBcGutpTohqbVWT1c5DxjXUnl5+yT+k7cE+oWigpKJGhe+TsT0w2bjBPo27JrqZVHx5rX7cGPNC+qdF0ncn3xzvskStxWQLzviyv3uCw25en39NuU+15SriHrvY6UyvFOLfW584bD8IcQ//iGZKHOJUgBlUUhl0v01uhDbu6z9DEclEWnykR1V2uCaKfbSHmiMW7dc63HW4FJZLL1Pn2PzVmj0oAn4TgDf47h4WaJJg7R8W5NZN+V9IJWOXiLHfVWmiZc3WWYDMt0JslN7l55D1ycv53e1san7/R/ed2zvoG3mb2mX3YNp/n7vUOkklmD5dkm2gk0EqHXoW1TJhHrj+kpBbWvfYwx19BT2x7lNrjpFIitYFJoQgOiOmRaatgR+n5tTl1vr7N18+iPY+/um8rX859ydm71hW63j9Dm/yQUJ/QoXI+r4Be8v2gkrkbcdKij279u6dcKSkKRJFiRFsdJJ8Zawb1h1ObqJmstNkS8/kMizXJmrGCjNhjDn8VBC4QcqSB/lt87lq6h2w7sltPVY7qn5LP8DYN7B+Q==</source>
   </file>
-  <file path="ObjectController.php" generated-path="ObjectController.html" hash="0134a2923e3c530660c3c606747c664e" package="Default">
+  <file path="ObjectController.php" generated-path="ObjectController.html" hash="83985cbee480544423f173840196be38" package="Default">
     <docblock line="0">
       <description>API class that allows object/in memory usage of the master INI controller</description>
       <long-description></long-description>
@@ -576,7 +625,7 @@ in memory. INI files are only directly read or modified using the 'load' and 'sa
           <tag name="return" line="75" description="True on success" type="boolean">
             <type>boolean</type>
           </tag>
-          <tag name="uses" line="75" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="75" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$parSection</name>
@@ -594,52 +643,84 @@ in memory. INI files are only directly read or modified using the 'load' and 'sa
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="95" package="SierraKomodo\INIController">
-        <name>fetch</name>
-        <full_name>\SierraKomodo\INIController\ObjectController::fetch()</full_name>
-        <docblock line="95">
-          <description>Fetches the data from memory.</description>
-          <long-description>This method can be used to retrieve the entirety of the INI data as a multi-level associative array, an entire INI section as an associative array, or a specific key=value pair.</long-description>
-          <tag name="param" line="95" description="" type="string" variable="$parSection">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="91" package="SierraKomodo\INIController">
+        <name>fetchFile</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::fetchFile()</full_name>
+        <docblock line="91">
+          <description>Fetches the full INI file from memory as a multi-level associative array</description>
+          <long-description></long-description>
+          <tag name="return" line="91" description="In the format of $array['Section']['Key'] = 'Value'" type="array">
+            <type>array</type>
+          </tag>
+          <tag name="uses" line="91" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="104" package="SierraKomodo\INIController">
+        <name>fetchSection</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::fetchSection()</full_name>
+        <docblock line="104">
+          <description>Fetches an INI section from memory as an associative array</description>
+          <long-description></long-description>
+          <tag name="param" line="104" description="" type="string" variable="$parSection">
             <type>string</type>
           </tag>
-          <tag name="param" line="95" description="" type="string" variable="$parKey">
-            <type>string</type>
-          </tag>
-          <tag name="return" line="95" description="Returns one of four things: 1, if Section is ommitted/null, returns the entire associative array of INI entries loaded in memory in the format of $array['Section]['Key'] = 'Value'; 2, if Key is ommitted/null, returns the entire associative array of a specific INI section in the format of $array['Key'] = 'Value'; 3, returns a string containing the value of a requested key; 4, in any of the previous situations, returns 'false' if there was no entry for the section and/or key." type="array|boolean|string">
+          <tag name="return" line="104" description="In the format of $array['Key'] = 'Value'. Returns boolean 'FALSE' if no matching section was found" type="array|boolean">
             <type>array</type>
             <type>boolean</type>
-            <type>string</type>
           </tag>
-          <tag name="uses" line="95" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="104" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$parSection</name>
-          <default>null</default>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="122" package="SierraKomodo\INIController">
+        <name>fetchKey</name>
+        <full_name>\SierraKomodo\INIController\ObjectController::fetchKey()</full_name>
+        <docblock line="122">
+          <description>Fetches a value from a key=value pair</description>
+          <long-description></long-description>
+          <tag name="param" line="122" description="" type="string" variable="$parSection">
+            <type>string</type>
+          </tag>
+          <tag name="param" line="122" description="" type="string" variable="$parKey">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="122" description="Returns the value of a key=value pair OR boolean 'FALSE' if no matching entry was found" type="string|boolean">
+            <type>string</type>
+            <type>boolean</type>
+          </tag>
+          <tag name="uses" line="122" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$parSection</name>
+          <default></default>
           <type>string</type>
         </argument>
         <argument line="0" by_reference="false">
           <name>$parKey</name>
-          <default>null</default>
+          <default></default>
           <type>string</type>
         </argument>
       </method>
-      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="123" package="SierraKomodo\INIController">
+      <method final="false" abstract="false" static="false" visibility="public" namespace="SierraKomodo\INIController" line="140" package="SierraKomodo\INIController">
         <name>delete</name>
         <full_name>\SierraKomodo\INIController\ObjectController::delete()</full_name>
-        <docblock line="123">
+        <docblock line="140">
           <description>Deletes a key=value pair from memory</description>
           <long-description></long-description>
-          <tag name="param" line="123" description="" type="string" variable="$parSection">
+          <tag name="param" line="140" description="" type="string" variable="$parSection">
             <type>string</type>
           </tag>
-          <tag name="param" line="123" description="" type="string" variable="$parKey">
+          <tag name="param" line="140" description="" type="string" variable="$parKey">
             <type>string</type>
           </tag>
-          <tag name="return" line="123" description="True on success" type="boolean">
+          <tag name="return" line="140" description="True on success" type="boolean">
             <type>boolean</type>
           </tag>
-          <tag name="uses" line="123" description="" link="\SierraKomodo\INIController\StaticController::$fileArray"/>
+          <tag name="uses" line="140" description="" link="\SierraKomodo\INIController\Controller::$fileArray"/>
         </docblock>
         <argument line="0" by_reference="false">
           <name>$parSection</name>
@@ -734,7 +815,7 @@ and then running $this-&gt;generateFile() afterwards.</long-description>
         <inherited_from>\SierraKomodo\INIController\Controller</inherited_from>
       </method>
     </class>
-    <source>eJzVVl1PG0cUfUfiP9wHJAdk7KTpE27aRolSoXyhgNoHiKJh9y5MszvjzszatRr+e8+d/TQGY2jSqo6UbHbv9zn3zPzw0/Ryur013tvb3qI9en50SEmuvKdwqQKpPLdzT/b8d07CWBsquLBuQaVXF0w2gxVToXxgR4fv4GpNcDbP2Um0GPFnVYZL6+hYs3PqtS1saqsPuU7YeKZfjt48lTfj7S35Y1TBfqoSXnI5Q/gXbfSJGJZ+nclZ90jK0zXfb9nxkbMznbInZeo4lGEAuVWpNhfRK9M5vmsTbB1/RG8ZY0rlJVJoX9c013lOjlVKmbMFIqY0dzowwTNVQZEP1nEa87bFjno5lEPVJl9Qqh0qwUOMhnowMp1pTtGalCV9DaTGQcwy8GrGAwSMVY16cE519QCIPstMboegsgNMns42AqpymLHz2hp6PHoyeryf8oxelM6xkeLRI15wbqcFXkzoncVwyxxfAgOTlBYcRjWZqgm+jwj0yMB/BjZpnxHbW3/BBb+KE/LbW/UD0j64MsHAR60VpuBUARSczHAH/3uFsTefx9XDtDwH11GnSYI09ulTG+tR40LPyKCP3cqjrkd+O8KG/R8FmdZ4d1J9v6r+6f/db+ENfHwE1k85qcBumLFEvsbjjrboBKHaAHCXopZZ/JIzVebBy1dJDAhCz0U2bI5tFEdechVGCrOBDXx7A3YcSmfo3NqcTlwpbCZfJgl73xndg2MHB7IA0s6j3TtwWpr5rQCNx/RBVkravdAz1C+9jgh+oGiXDtIijwu6xH7JasrqynghOZgEJKJQMe2cKZG1Vee2hCCFSg98wLJ1Weux1OxoW7onQ46x5BVDBKMoKEl/12psajA7FsUOH8oaUZYqF4D+XzAmSu5GlJHeNqLMb42KS89Zpxkr0Ha574nt8zT1Y8+YrKLPvHg2UzlmMVXadchuAOExx87WWLzmxZqvv0rarw3OccCqJH2IdmSGz2G/uAshrkS37mvYtDDsqr0RsGMOESvDc5r1eqJWotsKTnvxP57W8T+CDW2GSee8lOTQpDpRIMbySDpS4NDgzeB/xSG5rJc7Llu8QNwm+CciMdVhD/EBPoxrAfYNBEVmp3HmxkhQBtwjwqK5CbWyoYRmBRZZ7+dyQOOFt4kGTPBUMpWh3Icq/+jmqwFFT3OTOfZbNZqTXKPwJuJzT+bWE47Jvwg/v9SWH+IH3AlNvABmtnQiyebCH9CTIemM6kyEGdqiEElKx7L5wxo235vdaqcSVAaC7xh0T+oaoYtXQqbqhBDrneh3Omg5NkAnA2HYINJrMKHvYmF4/Q+K6k2/D9it5awU8bTLpZq5y4VZadNcOStIYzLHf5TVJQ5YT+j7oWRSpuXa1PFM2xJHoQ5lPCp9F3+QqdzjwqqjLTqSQ8PYONRFvH/HE6zhnEnHeIU8o39HdTLZxr7u1GdDKz+3nhVoaNmvNuzbrJ4abV09pbkixoiaeDHnLbHERvuolOukbXfFcU0hS56TZbeqsjXBIrjXna539sAuWoF+eDttiK/d10ZK/5JzDnzDMd9T/G8ml//dQZ7Gtm88y9ddvA6z1grKWO1gFaqvh7VQjOi9qMlce16y6p9Ko9VdXbdbpbl7r1aW9gFBOlpPVgjV8agZyv3uHVd/A0Rdip0=</source>
+    <source>eJzVV11P3EYUfUfiP9wHJAMCb6q+QdIWJaVCoQFlo/QBUDTY1zCN17OaGe92lfLfe+7Ya3t3YT9QSdVFAuOZ+3HuOffO7Oufh/fD7a3e/v72Fu3TyeUZJblyjvy98qTy3Iwdmds/OfE9XdCAB8ZOqHTqjslk2MU0UM6zpbMPMDWFtybP2Yq34PEXVfp7Y6mv2Vr13gxMaqqFXCdcOKbfLs9/lDe97S35KdSA3VAlPGNyDfdvG+/HsrF0y7Zct4+kHM3ZviTiS2tGOmVHqqj9UIYC5EalurgLVpnOsa4Lb2r/Mf3OKFMqLxFCuzqnsc5zsqxSyqwZwGNKY6s9EyxT5RU5byynIW6TbNyJoSyyLvIJpdoiEzwEb8gHJdOZ5hTQJC3BFUmOUYgSOTXiCA5DVnGHzqGuHkDRV6nJ0xRU+0CTo+u1iKoMRmydNgW9in+IXx2mPKK3pbVcSPLAiBecm+EAL47pg0FxyxwrnsFJShP2cS2mqoIXgYGOGPgvz0XaVcT21jeY4FNpQj77i3Zg2nlbJih43OxCFawagAUrNdzBf6co+3S5Vz0My1toHXkWiRdgX740vnbnLOkNFYCzVxnWaclnR0Rx+JMQtDvdvHdcrT9Uf7q/u0jOYeMCv27IScX5VCAzGpxarEBHn+CqcQBzSWpWzO84U2XunaxKYDDhOybSaGM0pRjyjKkIUwQOimDbqbNlX9qCbo3J6ZMtRdTkyiRh59pNG0jt6Ej6QODs7q2gK9T8CZ6OQkYLbPV69FHaTLDf6RHACPCYYA3ZtrExbuRxQvfoOWlXaWeJgzGEsmBsDFTIYcyUSCurW1NiSPlqRjiPBmyj1jWqpdLg21AufTR+JRchLAyZpNt/NVE1s62kAsLnSkimTRULrP8v5BPG8Fr6EWyb6+eP6ZiXAmTtUFnguU1kQ6JP0tT1HKPMir7y5M1I5SjMUGnb0rwGn30OMJfseM+TJaufJexLMrUj1TvBzskqonhmHtfADuagHCwkv4TFPvtAYMFjGnWAUjPRm+SuOjFvrupgNxBKE+e4NZ4JclakOlFQy2ydWqXgqOH1NHHKPrmv21/O1bbrwv2j7jIlkhmgQ/VhLqcxXjiTaIwqdLHqVnqB17CKjKsIYb7JrWonvL+KavzRzVUE9JHAjwL26KXJzwR51c9HXQzfnuq7xvFmlcWlUGrquA47V9ZinVqu7sFutf8OvfRkyefqHOPkElsXNM1IKDo9Oe//GpHOqMCgVcAhcacIZBJnpizS78JQjfSRPl28MyHhXe2kq5f22t5e12gJ0TNWnWZ8IM7xXeRxJ5nCWnfzZmqppkZ9+58b0//+cK5zrpYr3UzVIOKpQkM7CwfGxcdVcsH9ARL/vmIBtjUG+rOF0wzp5ymoMX9ZKb3jnD0/csh3Rs+LKem/OMbTAHgN4ldfws6yZi+u27L5oHYf+gGaxrfq6SSM6QIv7Vg7ntlVX5ETqX88K7ImkTqTeeLLYvX0WqmeNZy0Sl6UV6uqaVE2u248/APjU4+Y</source>
   </file>
   <package name="Default" full_name="Default"/>
   <package name="SierraKomodo" full_name="SierraKomodo">

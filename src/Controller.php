@@ -21,7 +21,7 @@ namespace SierraKomodo\INIController;
  * @package SierraKomodo\INIController
  * @used-by \SierraKomodo\INIController\ObjectController
  * @used-by \SierraKomodo\INIController\StaticController
- * @version 0.1.0-dev Currently in development; Not fully tested yet.
+ * @version 1.0.0-beta.1 Functional and tested. Documentation incomplete.
  */
 class Controller
 {

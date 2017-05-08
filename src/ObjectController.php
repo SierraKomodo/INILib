@@ -26,12 +26,14 @@ use SierraKomodo\INIController\Controller as Controller;
 class ObjectController extends Controller
 {
     /**
-     * ObjectController constructor. Alias of self::load()
+     * ObjectController constructor. Alias of self::load(). Does nothing if no file parameter is provided.
      * @param string $parFile
      */
     public function __construct(string $parFile = null)
     {
-        $this->load($parFile);
+        if (!empty($parFile)) {
+            $this->load($parFile);
+        }
     }
     
     

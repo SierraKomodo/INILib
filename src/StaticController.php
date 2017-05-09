@@ -21,7 +21,7 @@ use SierraKomodo\INIController\Controller as Controller;
  * @api
  * @package SierraKomodo\INIController
  * @uses \SierraKomodo\INIController\Controller
- * @version 1.0.0-beta.1 Functional and tested. Documentation incomplete.
+ * @version 0.1.0-dev Currently in development; Not fully tested yet.
  */
 class StaticController extends Controller
 {

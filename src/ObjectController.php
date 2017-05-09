@@ -21,7 +21,7 @@ use SierraKomodo\INIController\Controller as Controller;
  * @api
  * @package SierraKomodo\INIController
  * @uses \SierraKomodo\INIController\Controller
- * @version 0.1.0-dev Currently in development; Not fully tested yet.
+ * @version 0.1.0-review.1 Peer review version 1. Currently in development; Not fully tested yet.
  */
 class ObjectController extends Controller
 {

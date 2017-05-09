@@ -57,7 +57,7 @@ namespace SierraKomodo\INIController;
  * @package SierraKomodo\INIController
  * @used-by \SierraKomodo\INIController\ObjectController
  * @used-by \SierraKomodo\INIController\StaticController
- * @version 0.1.0-dev Currently in development; Not fully tested yet.
+ * @version 0.1.0-review.1 Peer review version 1. Currently in development; Not fully tested yet.
  */
 class Controller
 {
@@ -152,7 +152,7 @@ class Controller
         if ($parFile == null) {
             throw new \BadFunctionCallException(&quot;Parameter File must not be null if no filepath has previously been defined&quot;);
         }
-        if (!is_writable($parFile)) {
+        if (file_exists($parFile) and !is_writable($parFile)) {
             throw new \RuntimeException(&quot;File '{$parFile}' is not writable&quot;);
         }
         

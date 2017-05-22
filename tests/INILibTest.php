@@ -5,7 +5,6 @@ namespace SierraKomodo\INIController\Tests;
 use PHPUnit\Framework\TestCase;
 use SierraKomodo\INIController\INILib;
 
-
 /**
  * @coversDefaultClass \SierraKomodo\INIController\INILib
  */

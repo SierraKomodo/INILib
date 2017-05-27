@@ -6,7 +6,7 @@
  * @license GPL3
  */
 
-namespace SierraKomodo\INIController;
+namespace SierraKomodo\INILib;
 
 /**
  * Class INILibException
@@ -20,6 +20,8 @@ class INILibException extends \Exception
     const ERR_FILE_READ_WRITE_FAILED = 2;
     const ERR_INI_PARSE_FAILED       = 3;
     const ERR_INVALID_PARAMETER      = 4;
+    const ERR_FILE_NOT_WRITABLE      = 5;
+    const ERR_FILE_NOT_READABLE      = 6;
     const ERR_UNDEFINED              = -1;
     
     

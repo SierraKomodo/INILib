@@ -6,7 +6,7 @@
  * @license GPL3
  */
 
-namespace SierraKomodo\INIController;
+namespace SierraKomodo\INILib;
 
 /**
  * Primary INI library class
@@ -21,15 +21,19 @@ class INILib
 {
     /**
      * @var \SplFileObject The INI file being read and modified by this class
-     * @used-by \SierraKomodo\INIController\INILib::__construct()
-     * @used-by \SierraKomodo\INIController\INILib::parseINIData()
+     * @used-by INILib::__construct()
+     * @used-by INILib::parseINIData()
      */
     protected $fileObject;
     /**
      * @var array The contents of the INI file, converted to a multi-layer array (Same format as \parse_ini_file())
-     * @used-by \SierraKomodo\INIController\INILib::parseINIData()
+     * @used-by INILib::parseINIData()
+     * @used-by INILib::generateFileContent()
      */
     protected $iniDataArray = array();
+    
+    const FETCH_STRING = 1;
+    const FETCH_MIXED  = 2;
     
     
     /**
@@ -40,12 +44,10 @@ class INILib
      * @uses INILib::$fileObject
      * @uses INILib::parseINIData()
      */
-    public function __construct(
-        \SplFileObject $parFile,
-        int $parScannerMode = INI_SCANNER_NORMAL
-    ) {
+    public function __construct(\SplFileObject $parFile, int $parScannerMode = INI_SCANNER_NORMAL)
+    {
         $this->fileObject = $parFile;
-        $this->parseINIData();
+        $this->parseINIData($parScannerMode);
     }
     
     
@@ -62,6 +64,27 @@ class INILib
     
     
     /**
+     * Fetches a specified key=value pair from the data array. Alternative to using dataArray() to fetch the entire
+     *   array
+     *
+     * @param string $parSection
+     * @param string $parKey
+     * @return mixed|null The requested value (Type dependent on scanner mode used in the last parseINIData() call), or
+     *   NULL if no matching entry was found
+     */
+    public function fetchEntry(string $parSection, string $parKey)
+    {
+        // If the entry is empty, return null
+        if (empty($this->iniDataArray[$parSection][$parKey])) {
+            return null;
+        }
+        
+        // Return the value
+        return $this->iniDataArray[$parSection][$parKey];
+    }
+    
+    
+    /**
      * Reads the INI file and stores the contents into memory as a multi-layered array. Any 'unsaved changes' to the INI
      *   data in memory are lost.
      *
@@ -70,15 +93,14 @@ class INILib
      *   http://php.net/manual/en/function.parse-ini-string.php
      * @uses INILib::$fileObject
      * @uses INILib::$iniDataArray
-     * @throws INILibException if the file could not be locked (self::ERR_FLOCK_FAILED), read (self::ERR_FREAD_FAILED),
-     *   or parsed (self::ERR_INI_PARSE_FAILED)
+     * @throws INILibException if the file could not be locked, read, or parsed
      */
     public function parseINIData(int $parScannerMode = INI_SCANNER_NORMAL)
     {
         // Lock the file for reading
         if ($this->fileObject->flock(LOCK_SH) === false) {
             throw new INILibException(
-                "Failed to acquire a file lock",
+                "Failed to acquire a shared file lock",
                 INILibException::ERR_FILE_LOCK_FAILED
             );
         }
@@ -88,7 +110,10 @@ class INILib
         
         // Pull the file's contents
         $fileContents = $this->fileObject->fread($this->fileObject->getSize());
+        // TODO: Test possibility of using fpassthru() instead of fread()
+        // $fileContents = $this->fileObject->fpassthru();
         if ($fileContents === false) {
+            $this->fileObject->flock(LOCK_UN);
             throw new INILibException(
                 "Failed to read data from file",
                 INILibException::ERR_FILE_READ_WRITE_FAILED
@@ -98,6 +123,7 @@ class INILib
         // Parse data into data array
         $result = parse_ini_string($fileContents, true, $parScannerMode);
         if ($result === false) {
+            $this->fileObject->flock(LOCK_UN);
             throw new INILibException(
                 "Failed to parse file contents",
                 INILibException::ERR_INI_PARSE_FAILED
@@ -121,9 +147,9 @@ class INILib
      *   better consistency in writing and reading of INI files between this class, parse_ini_* functions, and any other
      *   programs written in other languages that may need to access these files.
      *
-     * @param string $parSection
-     * @param string $parKey
-     * @param string $parValue
+     * @param string $parSection INI section
+     * @param string $parKey INI key
+     * @param string $parValue Desired new value
      * @throws INILibException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
      *   saved to a file
      * @uses INILib::$iniDataArray
@@ -157,13 +183,6 @@ class INILib
                 INILibException::ERR_INVALID_PARAMETER
             );
         }
-        // No parameters should have line breaks
-        if ((strpos($parSection, PHP_EOL) !== false) or (strpos($parKey, PHP_EOL) !== false) or (strpos($parValue, PHP_EOL) !== false)) {
-            throw new INILibException(
-                "Parameters 1 (section name), 2 (key name), and 3 (value) cannot contain line breaks",
-                INILibException::ERR_INVALID_PARAMETER
-            );
-        }
         // Section and key should not start with ; or #, as these are used to denote comments. Handling of comments is
         //  outside the scope of this class.
         if ((substr($parSection, 0, 1) == '#') or (substr($parSection, 0, 1) == ';') or (substr($parKey, 0, 1) == '#') or (substr($parKey, 0, 1) == ';')) {
@@ -179,43 +198,102 @@ class INILib
     
     
     /**
-     * TODO
-     * @param string $parSection
-     * @param string $parKey
+     * Deletes a key=value pair from a specified section header in memory
+     *
+     * Parameters are trimmed of leading and trailing whitespace using trim() for consistency with the functionality of
+     *   $this->setKey()
+     *
+     * @param string $parSection INI section
+     * @param string $parKey INI key
+     * @uses INILib::$iniDataArray
      */
     public function deleteKey(string $parSection, string $parKey)
     {
-        // Ommitting parameter validations - As this method only deletes existing entries, any invalid section or key
+        // Trim whitespace
+        $parSection = trim($parSection);
+        $parKey     = trim($parKey);
+        
+        // Omitting parameter validations - As this method only deletes existing entries, any invalid section or key
         //  names will just have no effect.
         
-        // TODO
+        // Modify the data array
+        if (!empty($this->iniDataArray[$parSection][$parKey])) {
+            unset($this->iniDataArray[$parSection][$parKey]);
+        }
     }
     
     
     /**
-     * TODO
+     * Saves configuration data from memory into the INI file
+     * @throws INILibException If the file could not be locked, or if there was some other failure with write operations
+     * @uses INILib::$fileObject
+     * @uses INILib::generateFileContent()
      */
     public function saveData()
     {
-        // TODO
+        // Check if file is writable
+        if ($this->fileObject->isWritable() === false) {
+            throw new INILibException(
+                "File is not writable. Did you set the SplFileObject's open mode?",
+                INILibException::ERR_FILE_NOT_WRITABLE
+            );
+        }
+        
+        // Lock the file for writing
+        if ($this->fileObject->flock(LOCK_EX) === false) {
+            throw new INILibException(
+                "Failed to acquire an exclusive file lock",
+                INILibException::ERR_FILE_LOCK_FAILED
+            );
+        }
+        
+        // Set pointer to start of file
+        $this->fileObject->rewind();
+        
+        // Clear current file contents
+        if ($this->fileObject->ftruncate(0) === false) {
+            $this->fileObject->flock(LOCK_UN);
+            throw new INILibException(
+                "Failed to clear current data",
+                INILibException::ERR_FILE_READ_WRITE_FAILED
+            );
+        }
+        
+        // Generate formatted INI file content and write to file
+        if ($this->fileObject->fwrite($this->generateFileContent()) === null) {
+            $this->fileObject->flock(LOCK_UN);
+            throw new INILibException(
+                "Failed to write data to file",
+                INILibException::ERR_FILE_READ_WRITE_FAILED
+            );
+        }
+        
+        // Unlock the file when done
+        $this->fileObject->flock(LOCK_UN);
     }
     
     
     /**
-     * TODO
-     * @param $parFileName
+     * Generates a formatted string of INI data, primarily used for writing to INI files
+     * @return string The formatted string of INI data
+     * @uses    INILib::$iniDataArray
+     * @used-by INILib::saveData()
      */
-    public function saveDataAs($parFileName)
+    public function generateFileContent()
     {
-        // TODO
-    }
-    
-    
-    /**
-     *  TODO
-     */
-    protected function generateFileContent()
-    {
-        // TODO
+        // Convert data array to formatted INI string
+        $iniString = '';
+        foreach ($this->iniDataArray as $section => $keyPair) {
+            $iniString .= "[{$section}]\r\n";
+            
+            foreach ($keyPair as $key => $value) {
+                $iniString .= "{$key}={$value}\r\n";
+            }
+            
+            // Extra line break after sections for readability purposes
+            $iniString .= "\r\n";
+        }
+        
+        return $iniString;
     }
 }

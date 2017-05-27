@@ -1,5 +1,5 @@
 {
-  "name": "sierrakomodo/inicontroller",
+  "name": "sierrakomodo/inilib",
   "description": "Provides a series of INI controller classes for parsing, editing, and creating INI files.",
   "homepage": "https://github.com/SierraKomodo/INIController",
   "license": "GPL-3.0",
@@ -12,25 +12,24 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/SierraKomodo/INIController/issues",
-    "wiki": "https://github.com/SierraKomodo/INIController/wiki",
-    "source": "https://github.com/SierraKomodo/INIController"
+    "issues": "https://github.com/SierraKomodo/INILib/issues",
+    "wiki": "https://github.com/SierraKomodo/INILib/wiki",
+    "source": "https://github.com/SierraKomodo/INILib"
   },
   "require": {
     "php": ">=7.0.0"
   },
   "require-dev": {
-    "phpdocumentor/phpdocumentor": "2.*",
     "phpunit/phpunit": "^6.1"
   },
   "autoload": {
     "psr-4": {
-      "SierraKomodo\\INIController\\": "src/"
+      "SierraKomodo\\INILib\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SierraKomodo\\INIController\\Tests\\": "tests/"
+      "SierraKomodo\\INILib\\Tests\\": "tests/"
     }
   }
 }

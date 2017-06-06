@@ -9,7 +9,8 @@
 namespace SierraKomodo\INILib;
 
 /**
- * Class INILibException
+ * Extension of \Exception to provide predefined 'exception codes' for debugging/error handling purposes
+ *
  * @package SierraKomodo\INIController
  */
 class INILibException extends \Exception
@@ -26,8 +27,11 @@ class INILibException extends \Exception
     
     
     /**
-     * INILibException constructor. The only difference from Exception::__construct() is the default for parameter $code
-     *   being set to self::ERR_UNDEFINED
+     * INILibException constructor.
+     *
+     * The only difference from Exception::__construct() is the default for parameter $code being set to
+     *   self::ERR_UNDEFINED
+     *
      * @param string $message
      * @param int $code
      * @param \Throwable|null $previous

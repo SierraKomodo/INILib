@@ -64,8 +64,7 @@ class INILib
     
     
     /**
-     * Fetches a specified key=value pair from the data array. Alternative to using dataArray() to fetch the entire
-     *   array
+     * Fetches a specified key=value pair from the data array. Alternative to using dataArray() to fetch the entire array
      *
      * @param string $parSection
      * @param string $parKey
@@ -85,8 +84,9 @@ class INILib
     
     
     /**
-     * Reads the INI file and stores the contents into memory as a multi-layered array. Any 'unsaved changes' to the INI
-     *   data in memory are lost.
+     * Reads the INI file and stores the contents into memory as a multi-layered array.
+     *
+     * Any 'unsaved changes' to the INI data in memory are lost.
      *
      * @param int $parScannerMode One of INI_SCANNER_NORMAL, INI_SCANNER_RAW, INI_SCANNER_TYPED.
      *   Defaults to INI_SCANNER_NORMAL. See Parameters > scanner_mode here:
@@ -225,6 +225,7 @@ class INILib
     
     /**
      * Saves configuration data from memory into the INI file
+     *
      * @throws INILibException If the file could not be locked, or if there was some other failure with write operations
      * @uses INILib::$fileObject
      * @uses INILib::generateFileContent()
@@ -275,6 +276,7 @@ class INILib
     
     /**
      * Generates a formatted string of INI data, primarily used for writing to INI files
+     *
      * @return string The formatted string of INI data
      * @uses    INILib::$iniDataArray
      * @used-by INILib::saveData()

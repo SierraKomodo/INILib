@@ -110,8 +110,6 @@ class INILib
         
         // Pull the file's contents
         $fileContents = $this->fileObject->fread($this->fileObject->getSize());
-        // TODO: Test possibility of using fpassthru() instead of fread()
-        // $fileContents = $this->fileObject->fpassthru();
         if ($fileContents === false) {
             $this->fileObject->flock(LOCK_UN);
             throw new INILibException(

@@ -284,14 +284,14 @@ class INILib
         // Convert data array to formatted INI string
         $iniString = '';
         foreach ($this->iniDataArray as $section => $keyPair) {
-            $iniString .= "[{$section}]\r\n";
+            $iniString .= "[{$section}]" . PHP_EOL;
             
             foreach ($keyPair as $key => $value) {
-                $iniString .= "{$key}={$value}\r\n";
+                $iniString .= "{$key}={$value}" . PHP_EOL;
             }
             
             // Extra line break after sections for readability purposes
-            $iniString .= "\r\n";
+            $iniString .= PHP_EOL;
         }
         
         return $iniString;

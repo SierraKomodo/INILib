@@ -11,23 +11,11 @@ use SierraKomodo\INILib\INILib;
 class INILibTest extends TestCase
 {
     protected $INILib;
-    protected $fileNamePrebuilt     = __DIR__ . DIRECTORY_SEPARATOR . "test_prebuilt.ini";
-    protected $fileNameFake         = __DIR__ . DIRECTORY_SEPARATOR . "test_fake.ini";
-    protected $fileNameEmpty        = __DIR__ . DIRECTORY_SEPARATOR . "test_empty.ini";
-    protected $filePrebuiltContents = <<<INI
-[Section1]
-Key1=Value1
-Key2=Value2
-Key3=Value3
-
-[Section2]
-KeyA=1
-KeyB=2
-KeyC=3
-
-
-INI;
-    protected $filePrebuiltArray    = array(
+    protected $fileNamePrebuilt  = __DIR__ . DIRECTORY_SEPARATOR . "test_prebuilt.ini";
+    protected $fileNameFake      = __DIR__ . DIRECTORY_SEPARATOR . "test_fake.ini";
+    protected $fileNameEmpty     = __DIR__ . DIRECTORY_SEPARATOR . "test_empty.ini";
+    protected $filePrebuiltContents;
+    protected $filePrebuiltArray = array(
         'Section1' => array(
             'Key1' => 'Value1',
             'Key2' => 'Value2',
@@ -39,6 +27,25 @@ INI;
             'KeyC' => '3',
         )
     );
+    
+    
+    protected function SetUp()
+    {
+        $this->filePrebuiltContents = str_replace("\r\n", PHP_EOL, <<<INI
+[Section1]
+Key1=Value1
+Key2=Value2
+Key3=Value3
+
+[Section2]
+KeyA=1
+KeyB=2
+KeyC=3
+
+
+INI
+        );
+    }
     
     
     protected function TearDown()
@@ -77,7 +84,7 @@ INI;
     }
     
     
-    public function testGenerateFileContetn()
+    public function testGenerateFileContent()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file = new \SplFileObject($this->fileNamePrebuilt);
@@ -152,7 +159,7 @@ INI;
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file      = new \SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
-    
+        
         $this->INILib = new INILib($file);
         
         self::assertEquals(null, $this->INILib->fetchEntry('Section3', 'Foo'));
@@ -177,8 +184,8 @@ INI;
     public function testSaveData()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                  = new \SplFileObject($this->fileNamePrebuilt, 'r+');
-        $expectedString = <<<INI
+        $file           = new \SplFileObject($this->fileNamePrebuilt, 'r+');
+        $expectedString = str_replace("\r\n", PHP_EOL, <<<INI
 [Section1]
 Key1=Value1
 Key2=Value2
@@ -193,12 +200,14 @@ KeyC=3
 Foo=Bar
 
 
-INI;
+INI
+        );
         
         $this->INILib = new INILib($file);
         $this->INILib->setKey('Section3', 'Foo', 'Bar');
         $this->INILib->saveData();
         
-        self::assertEquals($expectedString, file_get_contents($this->fileNamePrebuilt));
+        $fileContent = str_replace("\r\n", PHP_EOL, file_get_contents($this->fileNamePrebuilt));
+        self::assertEquals($expectedString, $fileContent);
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "sierrakomodo/inilib",
   "description": "Provides a series of INI controller classes for parsing, editing, and creating INI files.",
-  "homepage": "https://github.com/SierraKomodo/INIController",
+  "homepage": "https://github.com/SierraKomodo/INILib",
   "license": "GPL-3.0",
   "authors": [
     {

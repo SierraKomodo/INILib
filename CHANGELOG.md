@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [Unreleased]
+### Changed
+ - Included installation instructions in README.md
+
+
 ## v0.1.0-review.2 - 2017-06-06
 ### Added
  - Travis-CI and StyleCI checks

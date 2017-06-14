@@ -32,9 +32,6 @@ class IniFile
      */
     protected $iniDataArray = array();
     
-    const FETCH_STRING = 1;
-    const FETCH_MIXED  = 2;
-    
     
     /**
      * INILib constructor.

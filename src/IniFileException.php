@@ -17,7 +17,6 @@ namespace SierraKomodo\INILib;
 class IniFileException extends \Exception
 {
     // Error code constants
-    const NO_ERR                     = 0;
     const ERR_FILE_LOCK_FAILED       = 1;
     const ERR_FILE_READ_WRITE_FAILED = 2;
     const ERR_INI_PARSE_FAILED       = 3;

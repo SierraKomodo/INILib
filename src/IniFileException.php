@@ -11,9 +11,10 @@ namespace SierraKomodo\INILib;
 /**
  * Extension of \Exception to provide predefined 'exception codes' for debugging/error handling purposes
  *
- * @package SierraKomodo\INIController
+ * @package SierraKomodo\INILib
+ * @version 0.1.0-review.3 Peer review version 3. Currently in development; Not fully tested yet.
  */
-class INILibException extends \Exception
+class IniFileException extends \Exception
 {
     // Error code constants
     const NO_ERR                     = 0;

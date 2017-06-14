@@ -3,14 +3,14 @@
 namespace SierraKomodo\INILib\Tests;
 
 use PHPUnit\Framework\TestCase;
-use SierraKomodo\INILib\INILib;
+use SierraKomodo\INILib\IniFile;
 
 /**
- * @coversDefaultClass \SierraKomodo\INIController\src
+ * @coversDefaultClass \SierraKomodo\INILib\IniFile
  */
-class INILibTest extends TestCase
+class IniFileTest extends TestCase
 {
-    protected $INILib;
+    protected $iniFile;
     protected $fileNamePrebuilt  = __DIR__ . DIRECTORY_SEPARATOR . "test_prebuilt.ini";
     protected $fileNameFake      = __DIR__ . DIRECTORY_SEPARATOR . "test_fake.ini";
     protected $fileNameEmpty     = __DIR__ . DIRECTORY_SEPARATOR . "test_empty.ini";
@@ -67,9 +67,9 @@ INI
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file = new \SplFileObject($this->fileNamePrebuilt);
         
-        $this->INILib = new INILib($file);
+        $this->iniFile = new IniFile($file);
         
-        self::assertInstanceOf(INILib::class, $this->INILib);
+        self::assertInstanceOf(IniFile::class, $this->iniFile);
     }
     
     
@@ -78,9 +78,9 @@ INI
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file = new \SplFileObject($this->fileNamePrebuilt);
         
-        $this->INILib = new INILib($file);
+        $this->iniFile = new IniFile($file);
         
-        self::assertEquals($this->filePrebuiltArray, $this->INILib->dataArray());
+        self::assertEquals($this->filePrebuiltArray, $this->iniFile->dataArray());
     }
     
     
@@ -89,9 +89,9 @@ INI
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file = new \SplFileObject($this->fileNamePrebuilt);
         
-        $this->INILib = new INILib($file);
+        $this->iniFile = new IniFile($file);
         
-        self::assertEquals($this->filePrebuiltContents, $this->INILib->generateFileContent());
+        self::assertEquals($this->filePrebuiltContents, $this->iniFile->generateFileContent());
     }
     
     
@@ -103,11 +103,11 @@ INI
         $testArray['Section1']['Key2'] = 'Apple';
         $testArray['Section2']['KeyA'] = 'Orange';
         
-        $this->INILib = new INILib($file);
-        $this->INILib->setKey('Section1', 'Key2', 'Apple');
-        $this->INILib->setKey('Section2', 'KeyA', 'Orange');
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setKey('Section1', 'Key2', 'Apple');
+        $this->iniFile->setKey('Section2', 'KeyA', 'Orange');
         
-        self::assertEquals($testArray, $this->INILib->dataArray());
+        self::assertEquals($testArray, $this->iniFile->dataArray());
     }
     
     
@@ -119,11 +119,11 @@ INI
         $testArray['Section3']['Key2'] = 'Apple';
         $testArray['Section3']['KeyA'] = 'Orange';
         
-        $this->INILib = new INILib($file);
-        $this->INILib->setKey('Section3', 'Key2', 'Apple');
-        $this->INILib->setKey('Section3', 'KeyA', 'Orange');
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setKey('Section3', 'Key2', 'Apple');
+        $this->iniFile->setKey('Section3', 'KeyA', 'Orange');
         
-        self::assertEquals($testArray, $this->INILib->dataArray());
+        self::assertEquals($testArray, $this->iniFile->dataArray());
     }
     
     
@@ -134,10 +134,10 @@ INI
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section3']['Key2'] = 'Apple';
         
-        $this->INILib = new INILib($file);
-        $this->INILib->setKey('  Section3 ', "\tKey2\r", "Apple\r\n");
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setKey('  Section3 ', "\tKey2\r", "Apple\r\n");
         
-        self::assertEquals($testArray, $this->INILib->dataArray());
+        self::assertEquals($testArray, $this->iniFile->dataArray());
     }
     
     
@@ -147,10 +147,10 @@ INI
         $file      = new \SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
-        $this->INILib = new INILib($file);
+        $this->iniFile = new IniFile($file);
         
-        self::assertEquals($testArray['Section1']['Key2'], $this->INILib->fetchEntry('Section1', 'Key2'));
-        self::assertEquals($testArray['Section2']['KeyC'], $this->INILib->fetchEntry('Section2', 'KeyC'));
+        self::assertEquals($testArray['Section1']['Key2'], $this->iniFile->fetchEntry('Section1', 'Key2'));
+        self::assertEquals($testArray['Section2']['KeyC'], $this->iniFile->fetchEntry('Section2', 'KeyC'));
     }
     
     
@@ -160,9 +160,9 @@ INI
         $file      = new \SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
-        $this->INILib = new INILib($file);
+        $this->iniFile = new IniFile($file);
         
-        self::assertEquals(null, $this->INILib->fetchEntry('Section3', 'Foo'));
+        self::assertEquals(null, $this->iniFile->fetchEntry('Section3', 'Foo'));
     }
     
     
@@ -173,11 +173,11 @@ INI
         $testArray = $this->filePrebuiltArray;
         unset($testArray['Section2']['KeyB']);
         
-        $this->INILib = new INILib($file);
-        $this->INILib->deleteKey('Section2', 'KeyB');
-        $this->INILib->deleteKey('Section3', 'NonExistantKey');
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->deleteKey('Section2', 'KeyB');
+        $this->iniFile->deleteKey('Section3', 'NonExistantKey');
         
-        self::assertEquals($testArray, $this->INILib->dataArray());
+        self::assertEquals($testArray, $this->iniFile->dataArray());
     }
     
     
@@ -203,9 +203,9 @@ Foo=Bar
 INI
         );
         
-        $this->INILib = new INILib($file);
-        $this->INILib->setKey('Section3', 'Foo', 'Bar');
-        $this->INILib->saveData();
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setKey('Section3', 'Foo', 'Bar');
+        $this->iniFile->saveData();
         
         $fileContent = str_replace("\r\n", PHP_EOL, file_get_contents($this->fileNamePrebuilt));
         self::assertEquals($expectedString, $fileContent);

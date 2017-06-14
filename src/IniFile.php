@@ -54,7 +54,7 @@ class IniFile
      * @return array $this->$iniDataArray
      * @uses IniFile::$iniDataArray
      */
-    public function dataArray(): array
+    public function fetchDataArray(): array
     {
         return $this->iniDataArray;
     }
@@ -149,7 +149,7 @@ class IniFile
      *   saved to a file
      * @uses IniFile::$iniDataArray
      */
-    public function setKey(string $parSection, string $parKey, string $parValue)
+    public function setEntry(string $parSection, string $parKey, string $parValue)
     {
         // Trim whitespace
         $parSection = trim($parSection);
@@ -202,7 +202,7 @@ class IniFile
      * @param string $parKey INI key
      * @uses IniFile::$iniDataArray
      */
-    public function deleteKey(string $parSection, string $parKey)
+    public function deleteEntry(string $parSection, string $parKey)
     {
         // Trim whitespace
         $parSection = trim($parSection);
@@ -225,7 +225,7 @@ class IniFile
      * @uses IniFile::$fileObject
      * @uses IniFile::generateFileContent()
      */
-    public function saveData()
+    public function saveDataToFile()
     {
         // Check if file is writable
         if ($this->fileObject->isWritable() === false) {
@@ -274,7 +274,7 @@ class IniFile
      *
      * @return string The formatted string of INI data
      * @uses    IniFile::$iniDataArray
-     * @used-by IniFile::saveData()
+     * @used-by IniFile::saveDataToFile()
      */
     public function generateFileContent()
     {

@@ -80,7 +80,7 @@ INI
         
         $this->iniFile = new IniFile($file);
         
-        self::assertEquals($this->filePrebuiltArray, $this->iniFile->dataArray());
+        self::assertEquals($this->filePrebuiltArray, $this->iniFile->fetchDataArray());
     }
     
     
@@ -104,10 +104,10 @@ INI
         $testArray['Section2']['KeyA'] = 'Orange';
         
         $this->iniFile = new IniFile($file);
-        $this->iniFile->setKey('Section1', 'Key2', 'Apple');
-        $this->iniFile->setKey('Section2', 'KeyA', 'Orange');
+        $this->iniFile->setEntry('Section1', 'Key2', 'Apple');
+        $this->iniFile->setEntry('Section2', 'KeyA', 'Orange');
         
-        self::assertEquals($testArray, $this->iniFile->dataArray());
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
@@ -120,10 +120,10 @@ INI
         $testArray['Section3']['KeyA'] = 'Orange';
         
         $this->iniFile = new IniFile($file);
-        $this->iniFile->setKey('Section3', 'Key2', 'Apple');
-        $this->iniFile->setKey('Section3', 'KeyA', 'Orange');
+        $this->iniFile->setEntry('Section3', 'Key2', 'Apple');
+        $this->iniFile->setEntry('Section3', 'KeyA', 'Orange');
         
-        self::assertEquals($testArray, $this->iniFile->dataArray());
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
@@ -135,9 +135,9 @@ INI
         $testArray['Section3']['Key2'] = 'Apple';
         
         $this->iniFile = new IniFile($file);
-        $this->iniFile->setKey('  Section3 ', "\tKey2\r", "Apple\r\n");
+        $this->iniFile->setEntry('  Section3 ', "\tKey2\r", "Apple\r\n");
         
-        self::assertEquals($testArray, $this->iniFile->dataArray());
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
@@ -174,10 +174,10 @@ INI
         unset($testArray['Section2']['KeyB']);
         
         $this->iniFile = new IniFile($file);
-        $this->iniFile->deleteKey('Section2', 'KeyB');
-        $this->iniFile->deleteKey('Section3', 'NonExistantKey');
+        $this->iniFile->deleteEntry('Section2', 'KeyB');
+        $this->iniFile->deleteEntry('Section3', 'NonExistantKey');
         
-        self::assertEquals($testArray, $this->iniFile->dataArray());
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
@@ -204,8 +204,8 @@ INI
         );
         
         $this->iniFile = new IniFile($file);
-        $this->iniFile->setKey('Section3', 'Foo', 'Bar');
-        $this->iniFile->saveData();
+        $this->iniFile->setEntry('Section3', 'Foo', 'Bar');
+        $this->iniFile->saveDataToFile();
         
         $fileContent = str_replace("\r\n", PHP_EOL, file_get_contents($this->fileNamePrebuilt));
         self::assertEquals($expectedString, $fileContent);

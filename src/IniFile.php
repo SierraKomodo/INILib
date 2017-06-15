@@ -8,6 +8,8 @@
 
 namespace SierraKomodo\INILib;
 
+use SplFileObject;
+
 /**
  * Primary INI library class
  *
@@ -20,7 +22,7 @@ namespace SierraKomodo\INILib;
 class IniFile
 {
     /**
-     * @var \SplFileObject The INI file being read and modified by this class
+     * @var SplFileObject The INI file being read and modified by this class
      * @used-by IniFile::__construct()
      * @used-by IniFile::parseINIData()
      */
@@ -36,12 +38,12 @@ class IniFile
     /**
      * INILib constructor.
      *
-     * @param \SplFileObject $parFile The INI file to initialize the object with
+     * @param SplFileObject $parFile The INI file to initialize the object with
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
      * @uses IniFile::parseINIData()
      */
-    public function __construct(\SplFileObject $parFile, int $parScannerMode = INI_SCANNER_NORMAL)
+    public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_NORMAL)
     {
         $this->fileObject = $parFile;
         $this->parseINIData($parScannerMode);

@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Changed
  - Included installation instructions in README.md
+ - Renamed INILib class to IniFile. Namespace remains the came - Use statements should now be `use SierraKomodo/INILib/IniFile;`
+ - Renamed INILibException to IniFileException
 
 
 ## v0.1.0-review.2 - 2017-06-06

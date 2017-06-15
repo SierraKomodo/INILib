@@ -4,6 +4,7 @@ namespace SierraKomodo\INILib\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SierraKomodo\INILib\IniFile;
+use SplFileObject;
 
 /**
  * @coversDefaultClass \SierraKomodo\INILib\IniFile
@@ -65,7 +66,7 @@ INI
     public function testConstructInstantiatesObject()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new \SplFileObject($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt);
         
         $this->iniFile = new IniFile($file);
         
@@ -76,7 +77,7 @@ INI
     public function testParseINIData()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new \SplFileObject($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt);
         
         $this->iniFile = new IniFile($file);
         
@@ -87,7 +88,7 @@ INI
     public function testGenerateFileContent()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new \SplFileObject($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt);
         
         $this->iniFile = new IniFile($file);
         
@@ -98,7 +99,7 @@ INI
     public function testSetKeyChangesExistingEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new \SplFileObject($this->fileNamePrebuilt);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section1']['Key2'] = 'Apple';
         $testArray['Section2']['KeyA'] = 'Orange';
@@ -114,7 +115,7 @@ INI
     public function testSetKeyAddsNewEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new \SplFileObject($this->fileNamePrebuilt);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section3']['Key2'] = 'Apple';
         $testArray['Section3']['KeyA'] = 'Orange';
@@ -130,7 +131,7 @@ INI
     public function testSetKeyStripsWhitespace()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new \SplFileObject($this->fileNamePrebuilt);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section3']['Key2'] = 'Apple';
         
@@ -144,7 +145,7 @@ INI
     public function testFetchEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new \SplFileObject($this->fileNamePrebuilt);
+        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
         $this->iniFile = new IniFile($file);
@@ -157,7 +158,7 @@ INI
     public function testFetchEntryReturnsNullForEmptyKey()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new \SplFileObject($this->fileNamePrebuilt);
+        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
         $this->iniFile = new IniFile($file);
@@ -169,7 +170,7 @@ INI
     public function testDeleteKey()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new \SplFileObject($this->fileNamePrebuilt);
+        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         unset($testArray['Section2']['KeyB']);
         
@@ -184,7 +185,7 @@ INI
     public function testSaveData()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file           = new \SplFileObject($this->fileNamePrebuilt, 'r+');
+        $file           = new SplFileObject($this->fileNamePrebuilt, 'r+');
         $expectedString = str_replace("\r\n", PHP_EOL, <<<INI
 [Section1]
 Key1=Value1

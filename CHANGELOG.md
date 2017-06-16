@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 ## [Unreleased]
+### Added
+ - `IniFile::fetchSection()` method to retrieve full sections from memory
+ - `IniFile::deleteSection()` method to delete full sections from memory
+
 ### Changed
  - Included installation instructions in `README.md`
  - Renamed `INILib` class to `IniFile`. Namespace remains the came - Use statements should now be `use SierraKomodo/INILib/IniFile;`

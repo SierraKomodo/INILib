@@ -83,8 +83,8 @@ class IniFile
      *
      * @param string $parSection
      * @param string $parKey
-     * @return mixed|null The requested value (Type dependent on scanner mode used in the last parseINIData() call), or
-     *   NULL if no matching entry was found
+     * @return mixed|null The requested value or `NULL` if no matching entry was found
+     * @uses IniFile::$iniDataArray
      */
     public function fetchEntry(string $parSection, string $parKey)
     {
@@ -95,6 +95,26 @@ class IniFile
 
         // Return the value
         return $this->iniDataArray[$parSection][$parKey];
+    }
+
+
+    /**
+     * Fetches a specified section array from the full data array.
+     *
+     * @param string $parSection
+     * @return array|null A key indexed array of values from the specified INI section, or `NULL` if no matching entry
+     *   was found
+     * @uses IniFile::$iniDataArray
+     */
+    public function fetchSection(string $parSection)
+    {
+        // If the entry is empty, return null
+        if (empty($this->iniDataArray[$parSection])) {
+            return null;
+        }
+
+        // Return the section
+        return $this->iniDataArray[$parSection];
     }
 
 
@@ -229,6 +249,24 @@ class IniFile
         // Modify the data array
         if (!empty($this->iniDataArray[$parSection][$parKey])) {
             unset($this->iniDataArray[$parSection][$parKey]);
+        }
+    }
+
+
+    /**
+     * Deletes a full section from memory
+     *
+     * @param string $parSection
+     * @uses IniFile::$iniDataArray
+     */
+    public function deleteSection(string $parSection)
+    {
+        // Trim whitespace
+        $parSection = trim($parSection);
+
+        // Modify the data array
+        if (!empty($this->iniDataArray[$parSection])) {
+            unset($this->iniDataArray[$parSection]);
         }
     }
 

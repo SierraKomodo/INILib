@@ -33,8 +33,14 @@ class IniFile
      * @used-by IniFile::generateFileContent()
      */
     protected $iniDataArray = array();
-    
-    
+    /**
+     * @var int The INI scanner mode to use when running parse_ini_* operations. Should be one of the predefined
+     *   INI_SCANNER_* options.
+     * @used-by IniFile::__construct()
+     */
+    protected $iniScannerMode;
+
+
     /**
      * INILib constructor.
      *
@@ -43,13 +49,14 @@ class IniFile
      * @uses IniFile::$fileObject
      * @uses IniFile::parseINIData()
      */
-    public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_NORMAL)
+    public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
     {
         $this->fileObject = $parFile;
-        $this->parseINIData($parScannerMode);
+        $this->iniScannerMode = $parScannerMode;
+        $this->parseINIData();
     }
-    
-    
+
+
     /**
      * Getter for $iniDataArray, to prevent arbitrary modifications to the array.
      *
@@ -60,8 +67,8 @@ class IniFile
     {
         return $this->iniDataArray;
     }
-    
-    
+
+
     /**
      * Fetches a specified key=value pair from the data array. Alternative to using dataArray() to fetch the entire array
      *
@@ -76,25 +83,23 @@ class IniFile
         if (empty($this->iniDataArray[$parSection][$parKey])) {
             return null;
         }
-        
+
         // Return the value
         return $this->iniDataArray[$parSection][$parKey];
     }
-    
-    
+
+
     /**
      * Reads the INI file and stores the contents into memory as a multi-layered array.
      *
-     * Any 'unsaved changes' to the INI data in memory are lost.
+     * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
+     *   memory are lost.
      *
-     * @param int $parScannerMode One of INI_SCANNER_NORMAL, INI_SCANNER_RAW, INI_SCANNER_TYPED.
-     *   Defaults to INI_SCANNER_NORMAL. See Parameters > scanner_mode here:
-     *   http://php.net/manual/en/function.parse-ini-string.php
      * @uses IniFile::$fileObject
      * @uses IniFile::$iniDataArray
      * @throws IniFileException if the file could not be locked, read, or parsed
      */
-    public function parseINIData(int $parScannerMode = INI_SCANNER_NORMAL)
+    public function parseINIData()
     {
         // Lock the file for reading
         if ($this->fileObject->flock(LOCK_SH) === false) {
@@ -103,10 +108,10 @@ class IniFile
                 IniFileException::ERR_FILE_LOCK_FAILED
             );
         }
-        
+
         // Set pointer to start of file
         $this->fileObject->rewind();
-        
+
         // Pull the file's contents
         $fileContents = $this->fileObject->fread($this->fileObject->getSize());
         if ($fileContents === false) {
@@ -116,23 +121,22 @@ class IniFile
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
-        
+
+        // Unlock file when done
+        $this->fileObject->flock(LOCK_UN);
+
         // Parse data into data array
-        $result = parse_ini_string($fileContents, true, $parScannerMode);
+        $result = parse_ini_string($fileContents, true, $this->iniScannerMode);
         if ($result === false) {
-            $this->fileObject->flock(LOCK_UN);
             throw new IniFileException(
                 "Failed to parse file contents",
                 IniFileException::ERR_INI_PARSE_FAILED
             );
         }
         $this->iniDataArray = $result;
-        
-        // Unlock the file when done
-        $this->fileObject->flock(LOCK_UN);
     }
-    
-    
+
+
     /**
      * Sets a key=value pair within an INI section header in memory.
      *
@@ -155,9 +159,9 @@ class IniFile
     {
         // Trim whitespace
         $parSection = trim($parSection);
-        $parKey     = trim($parKey);
-        $parValue   = trim($parValue);
-        
+        $parKey = trim($parKey);
+        $parValue = trim($parValue);
+
         // Parameter validations
         // As [ and ] are 'control' characters for sections, they shouldn't exist in section names
         if ((strpos($parSection, '[') !== false) or (strpos($parSection, ']') !== false)) {
@@ -188,12 +192,12 @@ class IniFile
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-        
+
         // Modify the data array
         $this->iniDataArray[$parSection][$parKey] = $parValue;
     }
-    
-    
+
+
     /**
      * Deletes a key=value pair from a specified section header in memory
      *
@@ -208,18 +212,18 @@ class IniFile
     {
         // Trim whitespace
         $parSection = trim($parSection);
-        $parKey     = trim($parKey);
-        
+        $parKey = trim($parKey);
+
         // Omitting parameter validations - As this method only deletes existing entries, any invalid section or key
         //  names will just have no effect.
-        
+
         // Modify the data array
         if (!empty($this->iniDataArray[$parSection][$parKey])) {
             unset($this->iniDataArray[$parSection][$parKey]);
         }
     }
-    
-    
+
+
     /**
      * Saves configuration data from memory into the INI file
      *
@@ -236,7 +240,7 @@ class IniFile
                 IniFileException::ERR_FILE_NOT_WRITABLE
             );
         }
-        
+
         // Lock the file for writing
         if ($this->fileObject->flock(LOCK_EX) === false) {
             throw new IniFileException(
@@ -244,10 +248,10 @@ class IniFile
                 IniFileException::ERR_FILE_LOCK_FAILED
             );
         }
-        
+
         // Set pointer to start of file
         $this->fileObject->rewind();
-        
+
         // Clear current file contents
         if ($this->fileObject->ftruncate(0) === false) {
             $this->fileObject->flock(LOCK_UN);
@@ -256,7 +260,7 @@ class IniFile
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
-        
+
         // Generate formatted INI file content and write to file
         if ($this->fileObject->fwrite($this->generateFileContent()) === null) {
             $this->fileObject->flock(LOCK_UN);
@@ -265,12 +269,12 @@ class IniFile
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
-        
+
         // Unlock the file when done
         $this->fileObject->flock(LOCK_UN);
     }
-    
-    
+
+
     /**
      * Generates a formatted string of INI data, primarily used for writing to INI files
      *
@@ -284,15 +288,15 @@ class IniFile
         $iniString = '';
         foreach ($this->iniDataArray as $section => $keyPair) {
             $iniString .= "[{$section}]" . PHP_EOL;
-            
+
             foreach ($keyPair as $key => $value) {
                 $iniString .= "{$key}={$value}" . PHP_EOL;
             }
-            
+
             // Extra line break after sections for readability purposes
             $iniString .= PHP_EOL;
         }
-        
+
         return $iniString;
     }
 }

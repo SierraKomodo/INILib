@@ -15,9 +15,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - `IniFile::setKey()` is now `IniFile::setEntry()`
     - `IniFile::deleteKey()` is now `IniFile::deleteEntry()`
     - `IniFile::saveData()` is now `IniFile::saveDataToFile()`
+ - Changed default scanner mode in `IniFile::__construct()` to `INI_SCANNER_TYPED`
+ - Scanner mode defined in `IniFile::__construct()` is now remembered. `IniFile::parseIniFile()` no longer accepts a scanner mode parameter
 
 ### Removed
  - `IniFileException::NO_ERR` constant
+ - Unused constants removed from `IniFile` class
 
 
 ## v0.1.0-review.2 - 2017-06-06

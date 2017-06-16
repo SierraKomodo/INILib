@@ -42,15 +42,24 @@ class IniFile
 
 
     /**
-     * INILib constructor.
+     * IniFile constructor.
      *
      * @param SplFileObject $parFile The INI file to initialize the object with
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
      * @uses IniFile::parseINIData()
+     * @throws IniFileException for invalid parameters
      */
     public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
     {
+        // Parameter validation
+        if (in_array($parScannerMode, [INI_SCANNER_NORMAL, INI_SCANNER_TYPED, INI_SCANNER_RAW], true) === false) {
+            throw new IniFileException(
+                'Provided scanner mode is invalid. Must be one of `INI_SCANNER_NORMAL`, `INI_SCANNER_TYPED`, or `INI_SCANNER_RAW`',
+                IniFileException::ERR_INVALID_PARAMETER
+            );
+        }
+
         $this->fileObject = $parFile;
         $this->iniScannerMode = $parScannerMode;
         $this->parseINIData();

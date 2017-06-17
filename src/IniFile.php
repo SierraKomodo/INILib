@@ -24,12 +24,12 @@ class IniFile
     /**
      * @var SplFileObject The INI file being read and modified by this class
      * @used-by IniFile::__construct()
-     * @used-by IniFile::parseINIData()
+     * @used-by IniFile::parseIniData()
      */
     protected $fileObject;
     /**
      * @var array The contents of the INI file, converted to a multi-layer array (Same format as \parse_ini_file())
-     * @used-by IniFile::parseINIData()
+     * @used-by IniFile::parseIniData()
      * @used-by IniFile::generateFileContent()
      */
     protected $iniDataArray = array();
@@ -47,7 +47,7 @@ class IniFile
      * @param SplFileObject $parFile The INI file to initialize the object with
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
-     * @uses IniFile::parseINIData()
+     * @uses IniFile::parseIniData()
      * @throws IniFileException for invalid parameters
      */
     public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
@@ -62,7 +62,7 @@ class IniFile
 
         $this->fileObject = $parFile;
         $this->iniScannerMode = $parScannerMode;
-        $this->parseINIData();
+        $this->parseIniData();
     }
 
 
@@ -128,7 +128,7 @@ class IniFile
      * @uses IniFile::$iniDataArray
      * @throws IniFileException if the file could not be locked, read, or parsed
      */
-    public function parseINIData()
+    public function parseIniData()
     {
         // Lock the file for reading
         if ($this->fileObject->flock(LOCK_SH) === false) {

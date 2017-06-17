@@ -74,7 +74,7 @@ INI
     }
     
     
-    public function testParseINIData()
+    public function testParseIniData()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file = new SplFileObject($this->fileNamePrebuilt);

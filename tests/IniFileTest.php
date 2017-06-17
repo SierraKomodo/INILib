@@ -167,6 +167,31 @@ INI
     }
     
     
+    public function testFetchSection()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file = new SplFileObject($this->fileNamePrebuilt);
+        $testArray = $this->filePrebuiltArray;
+        
+        $this->iniFile = new IniFile($file);
+        
+        self::assertEquals($testArray['Section1'], $this->iniFile->fetchSection('Section1'));
+        self::assertEquals($testArray['Section2'], $this->iniFile->fetchSection('Section2'));
+    }
+    
+    
+    public function testFetchSectionReturnsNullForEmptyKey()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file      = new SplFileObject($this->fileNamePrebuilt);
+        $testArray = $this->filePrebuiltArray;
+    
+        $this->iniFile = new IniFile($file);
+    
+        self::assertEquals(null, $this->iniFile->fetchSection('Section3'));
+    }
+    
+    
     public function testDeleteEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
@@ -176,13 +201,28 @@ INI
         
         $this->iniFile = new IniFile($file);
         $this->iniFile->deleteEntry('Section2', 'KeyB');
-        $this->iniFile->deleteEntry('Section3', 'NonExistantKey');
+        $this->iniFile->deleteEntry('Section3', 'NonExistentKey');
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
-    public function testSaveData()
+    public function testDeleteSection()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file      = new SplFileObject($this->fileNamePrebuilt);
+        $testArray = $this->filePrebuiltArray;
+        unset($testArray['Section2']);
+    
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->deleteSection('Section2');
+        $this->iniFile->deleteSection('Section3');
+    
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSaveDataToFile()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file           = new SplFileObject($this->fileNamePrebuilt, 'r+');

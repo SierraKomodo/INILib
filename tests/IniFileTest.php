@@ -142,6 +142,92 @@ INI
     }
     
     
+    public function testSetSectionChangesExistingSection()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
+        $testArray                     = $this->filePrebuiltArray;
+        
+        $keyValuePairs = array(
+            'Alpha' => 1,
+            'Bravo' => '2',
+            'Charlie' => '3',
+        );
+        $testArray['Section2'] = $keyValuePairs;
+    
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setSection('Section2', $keyValuePairs);
+    
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetSectionMergesExistingEntryWithArrayMerge()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
+        $testArray                     = $this->filePrebuiltArray;
+        $testArray['Section2']['Alpha'] = 1;
+        $testArray['Section2']['Bravo'] = '2';
+        $testArray['Section2']['Charlie'] = '3';
+    
+        $keyValuePairs = array(
+            'Alpha' => 1,
+            'Bravo' => '2',
+            'Charlie' => '3',
+        );
+    
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setSection('Section2', $keyValuePairs, true);
+    
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetSectionAddsNewSection()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
+        $testArray                     = $this->filePrebuiltArray;
+    
+        $keyValuePairs = array(
+            'Alpha' => 1,
+            'Bravo' => '2',
+            'Charlie' => '3',
+        );
+        $testArray['Section3'] = $keyValuePairs;
+    
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setSection('Section3', $keyValuePairs);
+    
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetSectionStripsWhitespace()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        $file                          = new SplFileObject($this->fileNamePrebuilt);
+        $testArray                     = $this->filePrebuiltArray;
+    
+        $keyValuePairs = array(
+            'Alpha   ' => 1,
+            '  Bravo' => '2   ',
+            '    Charlie' => '  3',
+        );
+        $testArray['Section3'] = array(
+            'Alpha' => 1,
+            'Bravo' => '2',
+            'Charlie' => '3',
+        );
+        
+        $this->iniFile = new IniFile($file);
+        $this->iniFile->setSection('  Section3 ', $keyValuePairs);
+        
+        self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
     public function testFetchEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);

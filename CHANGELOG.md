@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
  - `IniFile::fetchSection()` method to retrieve full sections from memory
  - `IniFile::deleteSection()` method to delete full sections from memory
+ - `IniFile::setSection()` method to modify or add full sections in memory
 
 ### Changed
  - Included installation instructions in `README.md`

@@ -96,7 +96,7 @@ INI
     }
     
     
-    public function testSetKeyChangesExistingEntry()
+    public function testSetEntryChangesExistingEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file                          = new SplFileObject($this->fileNamePrebuilt);
@@ -112,7 +112,7 @@ INI
     }
     
     
-    public function testSetKeyAddsNewEntry()
+    public function testSetEntryAddsNewEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file                          = new SplFileObject($this->fileNamePrebuilt);
@@ -128,7 +128,7 @@ INI
     }
     
     
-    public function testSetKeyStripsWhitespace()
+    public function testSetEntryStripsWhitespace()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file                          = new SplFileObject($this->fileNamePrebuilt);
@@ -167,7 +167,7 @@ INI
     }
     
     
-    public function testDeleteKey()
+    public function testDeleteEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
         $file      = new SplFileObject($this->fileNamePrebuilt);

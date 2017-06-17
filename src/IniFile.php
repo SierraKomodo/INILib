@@ -368,9 +368,6 @@ class IniFile
             );
         }
         
-        // Set pointer to start of file
-        $this->fileObject->rewind();
-        
         // Clear current file contents
         if ($this->fileObject->ftruncate(0) === false) {
             $this->fileObject->flock(LOCK_UN);
@@ -379,6 +376,9 @@ class IniFile
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
+    
+        // Set pointer to start of file
+        $this->fileObject->rewind();
         
         // Generate formatted INI file content and write to file
         if ($this->fileObject->fwrite($this->generateFileContent()) === null) {

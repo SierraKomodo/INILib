@@ -124,6 +124,7 @@ class IniFile
      * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
      *   memory are lost.
      *
+     * @return void
      * @uses IniFile::$fileObject
      * @uses IniFile::$iniDataArray
      * @throws IniFileException if the file could not be locked, read, or parsed
@@ -180,6 +181,7 @@ class IniFile
      * @param string $parSection INI section
      * @param string $parKey INI key
      * @param string $parValue Desired new value
+     * @return void
      * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
      *   saved to a file
      * @uses IniFile::$iniDataArray
@@ -236,6 +238,7 @@ class IniFile
      * @param array $parKeyValuePairs An associative array of key=value pairs the INI section should contain
      * @param bool $parMergeArrays Default `FALSE`. If set to `TRUE`, existing entries under the given section name will
      *   be merged with the new data. Key name conflicts will be overwritten by the new data.
+     * @return void
      * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
      *   saved to a file
      */
@@ -307,6 +310,7 @@ class IniFile
      *
      * @param string $parSection INI section
      * @param string $parKey INI key
+     * @return void
      * @uses IniFile::$iniDataArray
      */
     public function deleteEntry(string $parSection, string $parKey)
@@ -329,6 +333,7 @@ class IniFile
      * Deletes a full section from memory
      *
      * @param string $parSection
+     * @return void
      * @uses IniFile::$iniDataArray
      */
     public function deleteSection(string $parSection)
@@ -346,6 +351,7 @@ class IniFile
     /**
      * Saves configuration data from memory into the INI file
      *
+     * @return void
      * @throws IniFileException If the file could not be locked, or if there was some other failure with write operations
      * @uses IniFile::$fileObject
      * @uses IniFile::generateFileContent()

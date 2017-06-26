@@ -48,7 +48,7 @@ class IniFile
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
      * @uses IniFile::parseIniData()
-     * @throws IniFileException for invalid parameters
+     * @throws IniFileException for invalid parameters, or if the file is not readable
      */
     public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
     {
@@ -60,7 +60,15 @@ class IniFile
             );
         }
         
-        $this->fileObject     = $parFile;
+        // Verify the file is readable
+        if ($parFile->isReadable() === false) {
+            throw new IniFileException(
+                "The file {$parFile->getPathname()} could not be read",
+                IniFileException::ERR_FILE_NOT_READABLE
+            );
+        }
+        
+        $this->fileObject = $parFile;
         $this->iniScannerMode = $parScannerMode;
         $this->parseIniData();
     }
@@ -204,7 +212,12 @@ class IniFile
         // For similar reasons as above, a key name should not start with [
         // Section and key also should not start with ; or #, as these are used to denote comments. Handling of comments
         //  is outside the scope of this class
-        if ((in_array(substr($parSection, 0, 1), ['[', ';', '#']) === true) or (in_array(substr($parKey, 0, 1), ['[', ';', '#']) === true)) {
+        if ((in_array(substr($parSection, 0, 1), ['[', ';', '#']) === true) or (in_array(substr($parKey, 0, 1), [
+                    '[',
+                    ';',
+                    '#'
+                ]) === true)
+        ) {
             throw new IniFileException(
                 "First characters of parameter 1 (section name) and parameter 2 (key name) cannot be '[', '#', or ';'",
                 IniFileException::ERR_INVALID_PARAMETER
@@ -382,7 +395,7 @@ class IniFile
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
-    
+        
         // Set pointer to start of file
         $this->fileObject->rewind();
         

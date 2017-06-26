@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  - `IniFileException::__construct()` parameter 3 now requires type `\Exception` instead of `\Throwable`
  - `IniFile::parseIniData()` is now a protected method
  - `IniFile::generateFileContent()` is now a protected method
+ - `IniFile::__construct()` now checks if the INI file is readable, and throws `IniFileException` with code `IniFileException::ERR_FILE_NOT_READABLE` if it's not
 
 ### Removed
  - `IniFileException::NO_ERR` constant

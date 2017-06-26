@@ -68,7 +68,7 @@ class IniFile
             );
         }
         
-        $this->fileObject     = $parFile;
+        $this->fileObject = $parFile;
         $this->iniScannerMode = $parScannerMode;
         $this->parseIniData();
     }
@@ -202,26 +202,31 @@ class IniFile
         $parValue   = trim($parValue);
         
         // Parameter validations
-        $check = $this->validateSection($parSection);
-        if ($check !== true) {
+        // As [ and ] are 'control' characters for sections, they shouldn't exist in section names
+        if ((strpos($parSection, '[') !== false) or (strpos($parSection, ']') !== false)) {
             throw new IniFileException(
-                "Parameter 1 (section name) {$check}",
+                "Parameter 1 (section name) cannot contain the characters '[' or ']'",
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
-        $check = $this->validateKey($parKey);
-        if ($check !== true) {
+        // For similar reasons as above, a key name should not start with [
+        // Section and key also should not start with ; or #, as these are used to denote comments. Handling of comments
+        //  is outside the scope of this class
+        if ((in_array(substr($parSection, 0, 1), ['[', ';', '#']) === true) or (in_array(substr($parKey, 0, 1), [
+                    '[',
+                    ';',
+                    '#'
+                ]) === true)
+        ) {
             throw new IniFileException(
-                "Parameter 2 (key name) {$check}",
+                "First characters of parameter 1 (section name) and parameter 2 (key name) cannot be '[', '#', or ';'",
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
-        $check = $this->validateValue($parValue);
-        if ($check !== true) {
+        // A key name should also not contain =, as this is a control character that separates key from value
+        if (strpos($parKey, '=') !== false) {
             throw new IniFileException(
-                "Parameter 3 (value) {$check}",
+                "Parameter 2 (key name) cannot contain the character '='",
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
@@ -260,27 +265,35 @@ class IniFile
         }
         
         // Parameter validations
-        $check = $this->validateSection($parSection);
-        if ($check !== true) {
+        // As [ and ] are 'control' characters for sections, they shouldn't exist in section names
+        if ((strpos($parSection, '[') !== false) or (strpos($parSection, ']') !== false)) {
             throw new IniFileException(
-                "Parameter 1 (section name) {$check}",
+                "Parameter 1 (section name) cannot contain the characters '[' or ']'",
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-        
+        // Section also should not start with ; or #, as these are used to denote comments. Handling of comments is
+        //  outside the scope of this class
+        if (in_array(substr($parSection, 0, 1), ['[', ';', '#']) === true) {
+            throw new IniFileException(
+                "Parameter 1 (section name) cannot have a key that starts with the characters '[', ';', or '#'",
+                IniFileException::ERR_INVALID_PARAMETER
+            );
+        }
         foreach ($parKeyValuePairs as $key => $value) {
-            $check = $this->validateKey($key);
-            if ($check !== true) {
+            // For similar reasons as above, a key name should not start with [
+            // Key also should not start with ; or #, as these are used to denote comments. Handling of comments is
+            //  outside the scope of this class
+            if (in_array(substr($key, 0, 1), ['[', ';', '#']) === true) {
                 throw new IniFileException(
-                    "Parameter 2 (key=value pair list) keys {$check}",
+                    "Parameter 2 (key=value pair list) cannot have a key that starts with the characters '[', ';', or '#'",
                     IniFileException::ERR_INVALID_PARAMETER
                 );
             }
-            
-            $check = $this->validateValue($value);
-            if ($check !== true) {
+            // A key name should also not contain =, as this is a control character that separates key from value
+            if (strpos($key, '=') !== false) {
                 throw new IniFileException(
-                    "Parameter 2 (key=value pair list) values {$check}",
+                    "Parameter 2 (key=value pair list) cannot have a key that contains the character '='",
                     IniFileException::ERR_INVALID_PARAMETER
                 );
             }
@@ -423,45 +436,5 @@ class IniFile
         }
         
         return $iniString;
-    }
-    
-    
-    protected function validateKey(string $parKey): string
-    {
-        // Check for whitespace or specific 'key' characters:
-        //   [ and ] are 'control' characters for section names
-        //   ; and # are 'control' characters that designate the start of comments
-        //   = is a 'control' character that separates key from value
-        if (preg_match('/\[|\]|\s|=|^(;|#)/', $parKey)) {
-            return "cannot contain the characters '[', ']', ';', '#', '=', or any whitespace characters";
-        }
-        
-        // If all checks passed, return true
-        return true;
-    }
-    
-    
-    protected function validateSection(string $parSection): string
-    {
-        // Check for whitespace or specific 'key' characters:
-        //   [ and ] are 'control' characters for section names
-        if (preg_match('/\[|\]|\s/', $parSection)) {
-            return "cannot contain the characters '[', ']', ';', '#', or any whitespace characters";
-        }
-        
-        // If all checks passed, return true
-        return true;
-    }
-    
-    
-    protected function validateValue(string $parValue): string
-    {
-        // Check for line breaks
-        if (preg_match('/\r|\n/', $parValue)) {
-            return "cannot contain line breaks";
-        }
-        
-        // If all checks passed, return true
-        return true;
     }
 }

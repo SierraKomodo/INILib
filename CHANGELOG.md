@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - `IniFile::saveData()` is now `IniFile::saveDataToFile()`
  - Changed default scanner mode in `IniFile::__construct()` to `INI_SCANNER_TYPED`
  - Scanner mode defined in `IniFile::__construct()` is now remembered. `IniFile::parseIniFile()` no longer accepts a scanner mode parameter
+ - `composer.json` `require` flag for PHP now uses `^7.0` instead of `>=7.0.0`
 
 ### Removed
  - `IniFileException::NO_ERR` constant

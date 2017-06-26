@@ -129,7 +129,7 @@ class IniFile
      * @uses IniFile::$iniDataArray
      * @throws IniFileException if the file could not be locked, read, or parsed
      */
-    public function parseIniData()
+    protected function parseIniData()
     {
         // Lock the file for reading
         if ($this->fileObject->flock(LOCK_SH) === false) {
@@ -407,7 +407,7 @@ class IniFile
      * @uses    IniFile::$iniDataArray
      * @used-by IniFile::saveDataToFile()
      */
-    public function generateFileContent()
+    protected function generateFileContent()
     {
         // Convert data array to formatted INI string
         $iniString = '';

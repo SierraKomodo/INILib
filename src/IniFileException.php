@@ -38,6 +38,6 @@ class IniFileException extends \Exception
      */
     public function __construct($message = "", $code = self::ERR_UNDEFINED, \Exception $previous = null)
     {
-        parent::__construct();
+        parent::__construct($message, $code, $previous);
     }
 }

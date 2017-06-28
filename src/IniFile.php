@@ -428,12 +428,12 @@ class IniFile
     
     protected function validateKey(string $parKey): string
     {
-        // Check for whitespace or specific 'key' characters:
+        // Check for line breaks or specific 'key' characters:
         //   [ and ] are 'control' characters for section names
         //   ; and # are 'control' characters that designate the start of comments
         //   = is a 'control' character that separates key from value
-        if (preg_match('/\[|\]|\s|=|^(;|#)/', $parKey)) {
-            return "cannot contain the characters '[', ']', ';', '#', '=', or any whitespace characters";
+        if (preg_match('/\[|\]|\r|\n|=|^(;|#)/', $parKey)) {
+            return "cannot contain the characters '[', ']', ';', '#', '=', or line breaks";
         }
         
         // If all checks passed, return true
@@ -443,10 +443,10 @@ class IniFile
     
     protected function validateSection(string $parSection): string
     {
-        // Check for whitespace or specific 'key' characters:
+        // Check for line breaks or specific 'key' characters:
         //   [ and ] are 'control' characters for section names
-        if (preg_match('/\[|\]|\s/', $parSection)) {
-            return "cannot contain the characters '[', ']', ';', '#', or any whitespace characters";
+        if (preg_match('/\[|\]|\r|\n/', $parSection)) {
+            return "cannot contain the characters '[', ']', ';', '#', or line breaks";
         }
         
         // If all checks passed, return true

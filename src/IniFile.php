@@ -75,6 +75,52 @@ class IniFile
     
     
     /**
+     * Deletes a key=value pair from a specified section header in memory
+     *
+     * Parameters are trimmed of leading and trailing whitespace using trim() for consistency with the functionality of
+     *   $this->setKey()
+     *
+     * @param string $parSection INI section
+     * @param string $parKey INI key
+     * @return void
+     * @uses IniFile::$iniDataArray
+     */
+    public function deleteEntry(string $parSection, string $parKey)
+    {
+        // Trim whitespace
+        $parSection = trim($parSection);
+        $parKey     = trim($parKey);
+        
+        // Omitting parameter validations - As this method only deletes existing entries, any invalid section or key
+        //  names will just have no effect.
+        
+        // Modify the data array
+        if (!empty($this->iniDataArray[$parSection][$parKey])) {
+            unset($this->iniDataArray[$parSection][$parKey]);
+        }
+    }
+    
+    
+    /**
+     * Deletes a full section from memory
+     *
+     * @param string $parSection
+     * @return void
+     * @uses IniFile::$iniDataArray
+     */
+    public function deleteSection(string $parSection)
+    {
+        // Trim whitespace
+        $parSection = trim($parSection);
+        
+        // Modify the data array
+        if (!empty($this->iniDataArray[$parSection])) {
+            unset($this->iniDataArray[$parSection]);
+        }
+    }
+    
+    
+    /**
      * Getter for $iniDataArray, to prevent arbitrary modifications to the array.
      *
      * @return array $this->$iniDataArray
@@ -127,60 +173,54 @@ class IniFile
     
     
     /**
-     * Reads the INI file and stores the contents into memory as a multi-layered array.
-     *
-     * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
-     *   memory are lost.
-     *
-     * Note that if the file is empty (Has a file size of 0), this method will store an empty array instead or reading
-     *   the file, due to parameter restrictions in the SplFileObject::fread() method.
+     * Saves configuration data from memory into the INI file
      *
      * @return void
+     * @throws IniFileException If the file could not be locked, or if there was some other failure with write operations
      * @uses IniFile::$fileObject
-     * @uses IniFile::$iniDataArray
-     * @throws IniFileException if the file could not be locked, read, or parsed
+     * @uses IniFile::generateFileContent()
      */
-    protected function parseIniData()
+    public function saveDataToFile()
     {
-        // If file size is 0, set an empty array - fread() will fail otherwise
-        if ($this->fileObject->getSize() == 0) {
-            $this->iniDataArray = array();
-            return;
+        // Check if file is writable
+        if ($this->fileObject->isWritable() === false) {
+            throw new IniFileException(
+                "File is not writable. Did you set the SplFileObject's open mode?",
+                IniFileException::ERR_FILE_NOT_WRITABLE
+            );
         }
         
-        // Lock the file for reading
-        if ($this->fileObject->flock(LOCK_SH) === false) {
+        // Lock the file for writing
+        if ($this->fileObject->flock(LOCK_EX) === false) {
             throw new IniFileException(
-                "Failed to acquire a shared file lock",
+                "Failed to acquire an exclusive file lock",
                 IniFileException::ERR_FILE_LOCK_FAILED
+            );
+        }
+        
+        // Clear current file contents
+        if ($this->fileObject->ftruncate(0) === false) {
+            $this->fileObject->flock(LOCK_UN);
+            throw new IniFileException(
+                "Failed to clear current data",
+                IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
         
         // Set pointer to start of file
         $this->fileObject->rewind();
         
-        // Pull the file's contents
-        $fileContents = $this->fileObject->fread($this->fileObject->getSize());
-        if ($fileContents === false) {
+        // Generate formatted INI file content and write to file
+        if ($this->fileObject->fwrite($this->generateFileContent()) === null) {
             $this->fileObject->flock(LOCK_UN);
             throw new IniFileException(
-                "Failed to read data from file",
+                "Failed to write data to file",
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
         
-        // Unlock file when done
+        // Unlock the file when done
         $this->fileObject->flock(LOCK_UN);
-        
-        // Parse data into data array
-        $result = parse_ini_string($fileContents, true, $this->iniScannerMode);
-        if ($result === false) {
-            throw new IniFileException(
-                "Failed to parse file contents",
-                IniFileException::ERR_INI_PARSE_FAILED
-            );
-        }
-        $this->iniDataArray = $result;
     }
     
     
@@ -312,100 +352,60 @@ class IniFile
     
     
     /**
-     * Deletes a key=value pair from a specified section header in memory
+     * Reads the INI file and stores the contents into memory as a multi-layered array.
      *
-     * Parameters are trimmed of leading and trailing whitespace using trim() for consistency with the functionality of
-     *   $this->setKey()
+     * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
+     *   memory are lost.
      *
-     * @param string $parSection INI section
-     * @param string $parKey INI key
-     * @return void
-     * @uses IniFile::$iniDataArray
-     */
-    public function deleteEntry(string $parSection, string $parKey)
-    {
-        // Trim whitespace
-        $parSection = trim($parSection);
-        $parKey     = trim($parKey);
-        
-        // Omitting parameter validations - As this method only deletes existing entries, any invalid section or key
-        //  names will just have no effect.
-        
-        // Modify the data array
-        if (!empty($this->iniDataArray[$parSection][$parKey])) {
-            unset($this->iniDataArray[$parSection][$parKey]);
-        }
-    }
-    
-    
-    /**
-     * Deletes a full section from memory
-     *
-     * @param string $parSection
-     * @return void
-     * @uses IniFile::$iniDataArray
-     */
-    public function deleteSection(string $parSection)
-    {
-        // Trim whitespace
-        $parSection = trim($parSection);
-        
-        // Modify the data array
-        if (!empty($this->iniDataArray[$parSection])) {
-            unset($this->iniDataArray[$parSection]);
-        }
-    }
-    
-    
-    /**
-     * Saves configuration data from memory into the INI file
+     * Note that if the file is empty (Has a file size of 0), this method will store an empty array instead or reading
+     *   the file, due to parameter restrictions in the SplFileObject::fread() method.
      *
      * @return void
-     * @throws IniFileException If the file could not be locked, or if there was some other failure with write operations
      * @uses IniFile::$fileObject
-     * @uses IniFile::generateFileContent()
+     * @uses IniFile::$iniDataArray
+     * @throws IniFileException if the file could not be locked, read, or parsed
      */
-    public function saveDataToFile()
+    protected function parseIniData()
     {
-        // Check if file is writable
-        if ($this->fileObject->isWritable() === false) {
-            throw new IniFileException(
-                "File is not writable. Did you set the SplFileObject's open mode?",
-                IniFileException::ERR_FILE_NOT_WRITABLE
-            );
+        // If file size is 0, set an empty array - fread() will fail otherwise
+        if ($this->fileObject->getSize() == 0) {
+            $this->iniDataArray = array();
+            return;
         }
         
-        // Lock the file for writing
-        if ($this->fileObject->flock(LOCK_EX) === false) {
+        // Lock the file for reading
+        if ($this->fileObject->flock(LOCK_SH) === false) {
             throw new IniFileException(
-                "Failed to acquire an exclusive file lock",
+                "Failed to acquire a shared file lock",
                 IniFileException::ERR_FILE_LOCK_FAILED
-            );
-        }
-        
-        // Clear current file contents
-        if ($this->fileObject->ftruncate(0) === false) {
-            $this->fileObject->flock(LOCK_UN);
-            throw new IniFileException(
-                "Failed to clear current data",
-                IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
         
         // Set pointer to start of file
         $this->fileObject->rewind();
         
-        // Generate formatted INI file content and write to file
-        if ($this->fileObject->fwrite($this->generateFileContent()) === null) {
+        // Pull the file's contents
+        $fileContents = $this->fileObject->fread($this->fileObject->getSize());
+        if ($fileContents === false) {
             $this->fileObject->flock(LOCK_UN);
             throw new IniFileException(
-                "Failed to write data to file",
+                "Failed to read data from file",
                 IniFileException::ERR_FILE_READ_WRITE_FAILED
             );
         }
         
-        // Unlock the file when done
+        // Unlock file when done
         $this->fileObject->flock(LOCK_UN);
+        
+        // Parse data into data array
+        $result = parse_ini_string($fileContents, true, $this->iniScannerMode);
+        if ($result === false) {
+            throw new IniFileException(
+                "Failed to parse file contents",
+                IniFileException::ERR_INI_PARSE_FAILED
+            );
+        }
+        $this->iniDataArray = $result;
     }
     
     

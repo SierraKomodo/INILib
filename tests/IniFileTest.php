@@ -144,6 +144,45 @@ INI
     }
     
     
+    public function testSetEntryRejectsSymbolsInKey()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry('Section', '[Key', 'Value');
+    }
+    
+    
+    public function testSetEntryRejectsSymbolsInSection()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry(' [Section', 'Key', 'Value');
+    }
+    
+    
+    public function testSetEntryRejectsLineBreaks()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry('Section', 'Key', "Val\r\nue");
+    }
+    
+    
     public function testSetSectionChangesExistingSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);

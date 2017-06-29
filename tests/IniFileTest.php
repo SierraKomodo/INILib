@@ -85,17 +85,6 @@ INI
     }
     
     
-    public function testGenerateFileContent()
-    {
-        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new SplFileObject($this->fileNamePrebuilt);
-        
-        $this->iniFile = new IniFile($file);
-        
-        self::assertEquals($this->filePrebuiltContents, $this->iniFile->generateFileContent());
-    }
-    
-    
     public function testSetEntryChangesExistingEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);

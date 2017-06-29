@@ -44,15 +44,22 @@ class IniFile
     /**
      * IniFile constructor.
      *
-     * @param SplFileObject $parFile The INI file to initialize the object with
+     * @param string $parFile The full or relative path to the INI file to initialize the `SplFileObject` with
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
      * @uses IniFile::parseIniData()
      * @throws IniFileException for invalid parameters, or if the file is not readable
      */
-    public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
+    public function __construct(string $parFile, int $parScannerMode = INI_SCANNER_TYPED)
     {
         // Parameter validation
+        if (file_exists($parFile) === false) {
+            throw new IniFileException(
+                "The file {$parFile} does not exist",
+                IniFileException::ERR_FILE_NOT_EXIST
+            );
+        }
+        
         if (in_array($parScannerMode, [INI_SCANNER_NORMAL, INI_SCANNER_TYPED, INI_SCANNER_RAW], true) === false) {
             throw new IniFileException(
                 'Provided scanner mode is invalid. Must be one of `INI_SCANNER_NORMAL`, `INI_SCANNER_TYPED`, or `INI_SCANNER_RAW`',
@@ -60,15 +67,18 @@ class IniFile
             );
         }
         
-        // Verify the file is readable
-        if ($parFile->isReadable() === false) {
+        // Create the SplFileObject
+        $this->fileObject = new SplFileObject($parFile, 'r+');
+        
+        // Verify the file is readable by `SplFileObject` - This validation is done here, in the off chance
+        //  `is_readable()` returns `true`, but `SplFileObject::isReadable()` returns `false`
+        if ($this->fileObject->isReadable() === false) {
             throw new IniFileException(
-                "The file {$parFile->getPathname()} could not be read",
+                "The file {$this->fileObject->getPathname()} could not be read",
                 IniFileException::ERR_FILE_NOT_READABLE
             );
         }
         
-        $this->fileObject     = $parFile;
         $this->iniScannerMode = $parScannerMode;
         $this->parseIniData();
     }

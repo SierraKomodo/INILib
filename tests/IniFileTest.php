@@ -4,6 +4,7 @@ namespace SierraKomodo\INILib\Tests;
 
 use PHPUnit\Framework\TestCase;
 use SierraKomodo\INILib\IniFile;
+use SierraKomodo\INILib\IniFileException;
 use SplFileObject;
 
 /**
@@ -71,6 +72,18 @@ INI
         $this->iniFile = new IniFile($file);
         
         self::assertInstanceOf(IniFile::class, $this->iniFile);
+    }
+    
+    
+    public function testConstructReadsEmptyFile()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt);
+    
+        $this->iniFile = new IniFile($file);
+    
+        self::assertInstanceOf(IniFile::class, $this->iniFile);
+        self::assertEquals(array(), $this->iniFile->fetchDataArray());
     }
     
     

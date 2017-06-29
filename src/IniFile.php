@@ -132,6 +132,9 @@ class IniFile
      * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
      *   memory are lost.
      *
+     * Note that if the file is empty (Has a file size of 0), this method will store an empty array instead or reading
+     *   the file, due to parameter restrictions in the SplFileObject::fread() method.
+     *
      * @return void
      * @uses IniFile::$fileObject
      * @uses IniFile::$iniDataArray
@@ -139,6 +142,12 @@ class IniFile
      */
     protected function parseIniData()
     {
+        // If file size is 0, set an empty array - fread() will fail otherwise
+        if ($this->fileObject->getSize() == 0) {
+            $this->iniDataArray = array();
+            return;
+        }
+        
         // Lock the file for reading
         if ($this->fileObject->flock(LOCK_SH) === false) {
             throw new IniFileException(

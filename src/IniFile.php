@@ -352,6 +352,32 @@ class IniFile
     
     
     /**
+     * Generates a formatted string of INI data, primarily used for writing to INI files
+     *
+     * @return string The formatted string of INI data
+     * @uses    IniFile::$iniDataArray
+     * @used-by IniFile::saveDataToFile()
+     */
+    protected function generateFileContent()
+    {
+        // Convert data array to formatted INI string
+        $iniString = '';
+        foreach ($this->iniDataArray as $section => $keyPair) {
+            $iniString .= "[{$section}]" . PHP_EOL;
+            
+            foreach ($keyPair as $key => $value) {
+                $iniString .= "{$key}={$value}" . PHP_EOL;
+            }
+            
+            // Extra line break after sections for readability purposes
+            $iniString .= PHP_EOL;
+        }
+        
+        return $iniString;
+    }
+    
+    
+    /**
      * Reads the INI file and stores the contents into memory as a multi-layered array.
      *
      * Format of key=value pairs is dependent on `IniFile::$iniScannerMode` Any 'unsaved changes' to the INI data in
@@ -406,32 +432,6 @@ class IniFile
             );
         }
         $this->iniDataArray = $result;
-    }
-    
-    
-    /**
-     * Generates a formatted string of INI data, primarily used for writing to INI files
-     *
-     * @return string The formatted string of INI data
-     * @uses    IniFile::$iniDataArray
-     * @used-by IniFile::saveDataToFile()
-     */
-    protected function generateFileContent()
-    {
-        // Convert data array to formatted INI string
-        $iniString = '';
-        foreach ($this->iniDataArray as $section => $keyPair) {
-            $iniString .= "[{$section}]" . PHP_EOL;
-            
-            foreach ($keyPair as $key => $value) {
-                $iniString .= "{$key}={$value}" . PHP_EOL;
-            }
-            
-            // Extra line break after sections for readability purposes
-            $iniString .= PHP_EOL;
-        }
-        
-        return $iniString;
     }
     
     

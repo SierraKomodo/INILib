@@ -426,7 +426,7 @@ class IniFile
     }
     
     
-    protected function validateKey(string $parKey): string
+    protected function validateKey(string $parKey)
     {
         // Check for line breaks or specific 'key' characters:
         //   [ and ] are 'control' characters for section names
@@ -441,7 +441,7 @@ class IniFile
     }
     
     
-    protected function validateSection(string $parSection): string
+    protected function validateSection(string $parSection)
     {
         // Check for line breaks or specific 'key' characters:
         //   [ and ] are 'control' characters for section names
@@ -454,7 +454,7 @@ class IniFile
     }
     
     
-    protected function validateValue(string $parValue): string
+    protected function validateValue(string $parValue)
     {
         // Check for line breaks
         if (preg_match('/\r|\n/', $parValue)) {

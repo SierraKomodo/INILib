@@ -37,11 +37,13 @@ class IniFile
      * @var int The INI scanner mode to use when running parse_ini_* operations. Should be one of the predefined
      *   INI_SCANNER_* options.
      * @used-by IniFile::__construct()
+     * @used-by IniFile::parseIniData()
      */
     protected $iniScannerMode;
     /**
      * @var bool Read-only flag. Determines if any write operations are allowed.
      * @used-by IniFile::__construct()
+     * @used-by IniFile::saveDataToFile()
      */
     protected $readOnly = false;
     
@@ -53,6 +55,8 @@ class IniFile
      * @param bool $parReadOnly Read-only flag
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
+     * @uses IniFile::$readOnly
+     * @uses IniFile::$iniScannerMode
      * @uses IniFile::parseIniData()
      * @throws IniFileException for invalid parameters, if the file doesn't exist, or if the file is not readable
      */

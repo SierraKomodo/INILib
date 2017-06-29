@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  - `IniFile::__construct()` now checks if the INI file is readable, and throws `IniFileException` with code `IniFileException::ERR_FILE_NOT_READABLE` if it's not
  - `IniFile::__construct()` now checks if the INI file exists, and throws `IniFileException` with code `IniFileException::ERR_FILE_NOT_EXIST` if it does not
  - `IniFile::__construct()` first parameter now uses `string` instead of `SplFileObject` - The file object is created within the constructor using a filepath provided
+ - `IniFile::__construct()` now has a 'Read Only' flag as its second parameter
 
 ### Removed
  - `IniFileException::NO_ERR` constant

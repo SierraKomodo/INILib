@@ -39,18 +39,24 @@ class IniFile
      * @used-by IniFile::__construct()
      */
     protected $iniScannerMode;
+    /**
+     * @var bool Read-only flag. Determines if any write operations are allowed.
+     * @used-by IniFile::__construct()
+     */
+    protected $readOnly = false;
     
     
     /**
      * IniFile constructor.
      *
      * @param string $parFile The full or relative path to the INI file to initialize the `SplFileObject` with
+     * @param bool $parReadOnly Read-only flag
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
      * @uses IniFile::parseIniData()
-     * @throws IniFileException for invalid parameters, or if the file is not readable
+     * @throws IniFileException for invalid parameters, if the file doesn't exist, or if the file is not readable
      */
-    public function __construct(string $parFile, int $parScannerMode = INI_SCANNER_TYPED)
+    public function __construct(string $parFile, bool $parReadOnly = false, int $parScannerMode = INI_SCANNER_TYPED)
     {
         // Parameter validation
         if (file_exists($parFile) === false) {
@@ -79,6 +85,7 @@ class IniFile
             );
         }
         
+        $this->readOnly       = $parReadOnly;
         $this->iniScannerMode = $parScannerMode;
         $this->parseIniData();
     }
@@ -186,16 +193,25 @@ class IniFile
      * Saves configuration data from memory into the INI file
      *
      * @return void
-     * @throws IniFileException If the file could not be locked, or if there was some other failure with write operations
+     * @throws IniFileException If the read only flag is set, the file could not be locked, or if there was some other
+     *   failure with write operations
      * @uses IniFile::$fileObject
      * @uses IniFile::generateFileContent()
      */
     public function saveDataToFile()
     {
+        // Check if read-only flag is set
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_FILE_NOT_WRITABLE
+            );
+        }
+        
         // Check if file is writable
         if ($this->fileObject->isWritable() === false) {
             throw new IniFileException(
-                "File is not writable. Did you set the SplFileObject's open mode?",
+                "File is not writable by the SplFileObject",
                 IniFileException::ERR_FILE_NOT_WRITABLE
             );
         }
@@ -268,7 +284,7 @@ class IniFile
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
+        
         $check = $this->validateKey($parKey);
         if ($check !== true) {
             throw new IniFileException(
@@ -276,7 +292,7 @@ class IniFile
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
+        
         $check = $this->validateValue($parValue);
         if ($check !== true) {
             throw new IniFileException(

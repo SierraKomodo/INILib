@@ -74,7 +74,11 @@ class IniFile
         }
         
         // Create the SplFileObject
-        $this->fileObject = new SplFileObject($parFile, 'r+');
+        if ($parReadOnly === true) {
+            $this->fileObject = new SplFileObject($parFile, 'r');
+        } else {
+            $this->fileObject = new SplFileObject($parFile, 'r+');
+        }
         
         // Verify the file is readable by `SplFileObject` - This validation is done here, in the off chance
         //  `is_readable()` returns `true`, but `SplFileObject::isReadable()` returns `false`

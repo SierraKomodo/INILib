@@ -98,17 +98,6 @@ INI
     }
     
     
-    public function testGenerateFileContent()
-    {
-        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new SplFileObject($this->fileNamePrebuilt);
-        
-        $this->iniFile = new IniFile($file);
-        
-        self::assertEquals($this->filePrebuiltContents, $this->iniFile->generateFileContent());
-    }
-    
-    
     public function testSetEntryChangesExistingEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
@@ -152,6 +141,45 @@ INI
         $this->iniFile->setEntry('  Section3 ', "\tKey2\r", "Apple\r\n");
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetEntryRejectsSymbolsInKey()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry('Section', '[Key', 'Value');
+    }
+    
+    
+    public function testSetEntryRejectsSymbolsInSection()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry(' [Section', 'Key', 'Value');
+    }
+    
+    
+    public function testSetEntryRejectsLineBreaks()
+    {
+        touch($this->fileNamePrebuilt);
+        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
+        
+        $this->iniFile = new IniFile($file);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry('Section', 'Key', "Val\r\nue");
     }
     
     

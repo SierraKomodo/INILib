@@ -435,6 +435,15 @@ class IniFile
     }
     
     
+    /**
+     * Validates a given string is a properly formatted INI key name
+     *
+     * Invalid inputs include line breaks (`\r` and `\n`) and specific 'control' characters such as those that define
+     *   sections (`[` and `]`), comments (`;` and `#`), and separate keys from values (`=`)
+     *
+     * @param string $parKey
+     * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     */
     protected function validateKey(string $parKey)
     {
         // Check for line breaks or specific 'key' characters:
@@ -450,6 +459,15 @@ class IniFile
     }
     
     
+    /**
+     * Validates a given string is a properly formatted INI section name
+     *
+     * Invalid inputs include line breaks (`\r` and `\n`) and specific 'control' characters such as those that define
+     *   sections (`[` and `]`)
+     *
+     * @param string $parSection
+     * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     */
     protected function validateSection(string $parSection)
     {
         // Check for line breaks or specific 'key' characters:
@@ -463,6 +481,14 @@ class IniFile
     }
     
     
+    /**
+     * Validates a given string is a properly formatted INI value
+     *
+     * Invalid inputs include line breaks (`\r` and `\n`)
+     *
+     * @param string $parValue
+     * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     */
     protected function validateValue(string $parValue)
     {
         // Check for line breaks

@@ -64,6 +64,15 @@ INI
     }
     
     
+    public function testConstructFailsToOpenNonExistantFile()
+    {
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_FILE_NOT_EXIST);
+        
+        $this->iniFile = new IniFile($this->fileNameFake);
+    }
+    
+    
     public function testConstructInstantiatesObject()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);

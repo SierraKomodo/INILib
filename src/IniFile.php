@@ -16,6 +16,10 @@ use SplFileObject;
  * Leveraging a provided SplFileObject pointing to an INI file, this class provides in-memory reading and modifying of
  *   data stored in INI files. Methods are also provided to write any changes made in memory to the INI file.
  *
+ * NOTE: Due to current limitations, values in the data array will be directly converted to strings when saved to file,
+ *   with no other parsing/changes being performed (I.e., boolean `true` will be saved to file as string `1` instead of
+ *   `true`, `on`, etc.)
+ *
  * @package SierraKomodo\INILib
  * @version 0.1.0-review.3 Peer review version 3. Currently in development; Not fully tested yet.
  */

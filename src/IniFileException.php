@@ -50,6 +50,10 @@ class IniFileException extends \Exception
      */
     const ERR_FILE_NOT_EXIST = 7;
     /**
+     * @var Integer Exception code; The object is in read only mode and a write operation was attempted
+     */
+    const ERR_READ_ONLY_MODE = 8;
+    /**
      * @var Integer Exception code; No exception code was provided in the throw statement, or no pre-defined codes match
      *   the scenario
      */

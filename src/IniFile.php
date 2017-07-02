@@ -112,10 +112,19 @@ class IniFile
      * @param string $parSection INI section
      * @param string $parKey INI key
      * @return void
+     * @throws IniFileException if the object is in read-only mode
      * @uses IniFile::$iniDataArray
      */
     public function deleteEntry(string $parSection, string $parKey)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         $parKey     = trim($parKey);
@@ -135,10 +144,19 @@ class IniFile
      *
      * @param string $parSection
      * @return void
+     * @throws IniFileException if the object is in read-only mode
      * @uses IniFile::$iniDataArray
      */
     public function deleteSection(string $parSection)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         
@@ -277,12 +295,20 @@ class IniFile
      * @param string $parKey INI key
      * @param string $parValue Desired new value
      * @return void
-     * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
-     *   saved to a file
+     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
+     *   or would cause INI parsing errors if saved to a file
      * @uses IniFile::$iniDataArray
      */
     public function setEntry(string $parSection, string $parKey, string $parValue)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         $parKey     = trim($parKey);
@@ -334,11 +360,19 @@ class IniFile
      * @param bool $parMergeArrays Default `FALSE`. If set to `TRUE`, existing entries under the given section name will
      *   be merged with the new data. Key name conflicts will be overwritten by the new data.
      * @return void
-     * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
-     *   saved to a file
+     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
+     *   or would cause INI parsing errors if saved to a file
      */
     public function setSection(string $parSection, array $parKeyValuePairs, bool $parMergeArrays = false)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         foreach ($parKeyValuePairs as $key => $value) {

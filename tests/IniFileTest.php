@@ -5,7 +5,6 @@ namespace SierraKomodo\INILib\Tests;
 use PHPUnit\Framework\TestCase;
 use SierraKomodo\INILib\IniFile;
 use SierraKomodo\INILib\IniFileException;
-use SplFileObject;
 
 /**
  * @coversDefaultClass \SierraKomodo\INILib\IniFile
@@ -106,6 +105,18 @@ INI
     }
     
     
+    public function testDeleteEntryBlockedByReadOnly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        $this->iniFile->deleteEntry('Section2', 'KeyB');
+    }
+    
+    
     public function testDeleteSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
@@ -120,10 +131,22 @@ INI
     }
     
     
+    public function testDeleteSectionBlockedByReadOnly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        $this->iniFile->deleteSection('Section2');
+    }
+    
+    
     public function testFetchEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $testArray = $this->filePrebuiltArray;
+        $testArray     = $this->filePrebuiltArray;
         $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals($testArray['Section1']['Key2'], $this->iniFile->fetchEntry('Section1', 'Key2'));
@@ -143,7 +166,7 @@ INI
     public function testFetchSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $testArray = $this->filePrebuiltArray;
+        $testArray     = $this->filePrebuiltArray;
         $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals($testArray['Section1'], $this->iniFile->fetchSection('Section1'));
@@ -196,6 +219,19 @@ INI
         
         $fileContent = str_replace("\r\n", PHP_EOL, file_get_contents($this->fileNamePrebuilt));
         self::assertEquals($expectedString, $fileContent);
+    }
+    
+    
+    public function testSaveDataToFileBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->saveDataToFile();
     }
     
     
@@ -272,6 +308,19 @@ INI
         $this->iniFile->setEntry('  Section3 ', "\tKey2\r", "Apple\r\n");
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetEntryBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->setEntry('Section', 'Key', 'Value');
     }
     
     
@@ -354,5 +403,18 @@ INI
         $this->iniFile->setSection('  Section3 ', $keyValuePairs);
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetSectionBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->setSection('Section', array('key' => 'value'));
     }
 }

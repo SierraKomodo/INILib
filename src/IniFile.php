@@ -234,7 +234,7 @@ class IniFile
         if ($this->readOnly === true) {
             throw new IniFileException(
                 'IniFile object is in read only mode',
-                IniFileException::ERR_FILE_NOT_WRITABLE
+                IniFileException::ERR_READ_ONLY_MODE
             );
         }
         

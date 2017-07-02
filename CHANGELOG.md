@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  - `IniFile::fetchSection()` method to retrieve full sections from memory
  - `IniFile::deleteSection()` method to delete full sections from memory
  - `IniFile::setSection()` method to modify or add full sections in memory
+ - `IniFile::__construct()` now has a boolean 'Read Only' flag as its second parameter. If set to `TRUE`, any attempts to use methods that modify the data array or save data to the file will throw a `IniFileException` with code `IniFileException::ERR_READ_ONLY_MODE`
 
 ### Changed
  - Included installation instructions in `README.md`
@@ -29,7 +30,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  - `IniFile::__construct()` now checks if the INI file is readable, and throws `IniFileException` with code `IniFileException::ERR_FILE_NOT_READABLE` if it's not
  - `IniFile::__construct()` now checks if the INI file exists, and throws `IniFileException` with code `IniFileException::ERR_FILE_NOT_EXIST` if it does not
  - `IniFile::__construct()` first parameter now uses `string` instead of `SplFileObject` - The file object is created within the constructor using a filepath provided
- - `IniFile::__construct()` now has a 'Read Only' flag as its second parameter
 
 ### Removed
  - `IniFileException::NO_ERR` constant

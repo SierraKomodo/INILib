@@ -31,4 +31,4 @@ Manual:
  - Download the release version of your choice (Latest release is always recommended)
  - Copy the contents of the `src/` directory to a location of your choice
  - Use whatever autoloader or require/include method best fits your project
- - In your PHP files, add the following use statement: `use SierraKomodo/INILib/IniFile`
+ - In your PHP files, add the following use statement: `use SierraKomodo/INILib`

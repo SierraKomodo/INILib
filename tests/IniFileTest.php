@@ -5,7 +5,6 @@ namespace SierraKomodo\INILib\Tests;
 use PHPUnit\Framework\TestCase;
 use SierraKomodo\INILib\IniFile;
 use SierraKomodo\INILib\IniFileException;
-use SplFileObject;
 
 /**
  * @coversDefaultClass \SierraKomodo\INILib\IniFile
@@ -64,12 +63,19 @@ INI
     }
     
     
+    public function testConstructFailsToOpenNonExistantFile()
+    {
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_FILE_NOT_EXIST);
+        
+        $this->iniFile = new IniFile($this->fileNameFake);
+    }
+    
+    
     public function testConstructInstantiatesObject()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new SplFileObject($this->fileNamePrebuilt);
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertInstanceOf(IniFile::class, $this->iniFile);
     }
@@ -78,9 +84,7 @@ INI
     public function testConstructReadsEmptyFile()
     {
         touch($this->fileNamePrebuilt);
-        $file = new SplFileObject($this->fileNamePrebuilt);
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertInstanceOf(IniFile::class, $this->iniFile);
         self::assertEquals(array(), $this->iniFile->fetchDataArray());
@@ -90,11 +94,10 @@ INI
     public function testDeleteEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         unset($testArray['Section2']['KeyB']);
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->deleteEntry('Section2', 'KeyB');
         $this->iniFile->deleteEntry('Section3', 'NonExistentKey');
         
@@ -102,14 +105,25 @@ INI
     }
     
     
+    public function testDeleteEntryBlockedByReadOnly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        $this->iniFile->deleteEntry('Section2', 'KeyB');
+    }
+    
+    
     public function testDeleteSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         unset($testArray['Section2']);
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->deleteSection('Section2');
         $this->iniFile->deleteSection('Section3');
         
@@ -117,13 +131,23 @@ INI
     }
     
     
+    public function testDeleteSectionBlockedByReadOnly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        $this->iniFile->deleteSection('Section2');
+    }
+    
+    
     public function testFetchEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
-        $testArray = $this->filePrebuiltArray;
-        
-        $this->iniFile = new IniFile($file);
+        $testArray     = $this->filePrebuiltArray;
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals($testArray['Section1']['Key2'], $this->iniFile->fetchEntry('Section1', 'Key2'));
         self::assertEquals($testArray['Section2']['KeyC'], $this->iniFile->fetchEntry('Section2', 'KeyC'));
@@ -133,10 +157,7 @@ INI
     public function testFetchEntryReturnsNullForEmptyKey()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
-        $testArray = $this->filePrebuiltArray;
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals(null, $this->iniFile->fetchEntry('Section3', 'Foo'));
     }
@@ -145,10 +166,8 @@ INI
     public function testFetchSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
-        $testArray = $this->filePrebuiltArray;
-        
-        $this->iniFile = new IniFile($file);
+        $testArray     = $this->filePrebuiltArray;
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals($testArray['Section1'], $this->iniFile->fetchSection('Section1'));
         self::assertEquals($testArray['Section2'], $this->iniFile->fetchSection('Section2'));
@@ -158,10 +177,7 @@ INI
     public function testFetchSectionReturnsNullForEmptyKey()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
-        $testArray = $this->filePrebuiltArray;
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals(null, $this->iniFile->fetchSection('Section3'));
     }
@@ -170,9 +186,7 @@ INI
     public function testParseIniData()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file = new SplFileObject($this->fileNamePrebuilt);
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         
         self::assertEquals($this->filePrebuiltArray, $this->iniFile->fetchDataArray());
     }
@@ -181,7 +195,6 @@ INI
     public function testSaveDataToFile()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file           = new SplFileObject($this->fileNamePrebuilt, 'r+');
         $expectedString = str_replace("\r\n", PHP_EOL, <<<INI
 [Section1]
 Key1=Value1
@@ -200,7 +213,7 @@ Foo=Bar
 INI
         );
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setEntry('Section3', 'Foo', 'Bar');
         $this->iniFile->saveDataToFile();
         
@@ -209,15 +222,27 @@ INI
     }
     
     
+    public function testSaveDataToFileBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->saveDataToFile();
+    }
+    
+    
     public function testSetEntryAddsNewEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section3']['Key2'] = 'Apple';
         $testArray['Section3']['KeyA'] = 'Orange';
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setEntry('Section3', 'Key2', 'Apple');
         $this->iniFile->setEntry('Section3', 'KeyA', 'Orange');
         
@@ -228,12 +253,11 @@ INI
     public function testSetEntryChangesExistingEntry()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section1']['Key2'] = 'Apple';
         $testArray['Section2']['KeyA'] = 'Orange';
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setEntry('Section1', 'Key2', 'Apple');
         $this->iniFile->setEntry('Section2', 'KeyA', 'Orange');
         
@@ -244,9 +268,7 @@ INI
     public function testSetEntryRejectsSymbolsInKey()
     {
         touch($this->fileNamePrebuilt);
-        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         self::expectException(IniFileException::class);
         self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
         
@@ -257,9 +279,7 @@ INI
     public function testSetEntryRejectsSymbolsInSection()
     {
         touch($this->fileNamePrebuilt);
-        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         self::expectException(IniFileException::class);
         self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
         
@@ -270,9 +290,7 @@ INI
     public function testSetEntryRejectsLineBreaks()
     {
         touch($this->fileNamePrebuilt);
-        $file = new SplFileObject($this->fileNamePrebuilt, 'r+');
-        
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         self::expectException(IniFileException::class);
         self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
         
@@ -283,21 +301,32 @@ INI
     public function testSetEntryStripsWhitespace()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                          = new SplFileObject($this->fileNamePrebuilt);
         $testArray                     = $this->filePrebuiltArray;
         $testArray['Section3']['Key2'] = 'Apple';
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setEntry('  Section3 ', "\tKey2\r", "Apple\r\n");
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
     }
     
     
+    public function testSetEntryBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->setEntry('Section', 'Key', 'Value');
+    }
+    
+    
     public function testSetSectionAddsNewSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
         $keyValuePairs         = array(
@@ -307,7 +336,7 @@ INI
         );
         $testArray['Section3'] = $keyValuePairs;
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setSection('Section3', $keyValuePairs);
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
@@ -317,7 +346,6 @@ INI
     public function testSetSectionChangesExistingSection()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
         $keyValuePairs         = array(
@@ -327,7 +355,7 @@ INI
         );
         $testArray['Section2'] = $keyValuePairs;
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setSection('Section2', $keyValuePairs);
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
@@ -337,7 +365,6 @@ INI
     public function testSetSectionMergesExistingEntryWithArrayMerge()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file                             = new SplFileObject($this->fileNamePrebuilt);
         $testArray                        = $this->filePrebuiltArray;
         $testArray['Section2']['Alpha']   = 1;
         $testArray['Section2']['Bravo']   = '2';
@@ -349,7 +376,7 @@ INI
             'Charlie' => '3',
         );
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setSection('Section2', $keyValuePairs, true);
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
@@ -359,7 +386,6 @@ INI
     public function testSetSectionStripsWhitespace()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-        $file      = new SplFileObject($this->fileNamePrebuilt);
         $testArray = $this->filePrebuiltArray;
         
         $keyValuePairs         = array(
@@ -373,9 +399,22 @@ INI
             'Charlie' => '3',
         );
         
-        $this->iniFile = new IniFile($file);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
         $this->iniFile->setSection('  Section3 ', $keyValuePairs);
         
         self::assertEquals($testArray, $this->iniFile->fetchDataArray());
+    }
+    
+    
+    public function testSetSectionBlockedByReadonly()
+    {
+        file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
+        
+        $this->iniFile = new IniFile($this->fileNamePrebuilt, true);
+        
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_READ_ONLY_MODE);
+        
+        $this->iniFile->setSection('Section', array('key' => 'value'));
     }
 }

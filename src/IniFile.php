@@ -16,6 +16,10 @@ use SplFileObject;
  * Leveraging a provided SplFileObject pointing to an INI file, this class provides in-memory reading and modifying of
  *   data stored in INI files. Methods are also provided to write any changes made in memory to the INI file.
  *
+ * NOTE: Due to current limitations, values in the data array will be directly converted to strings when saved to file,
+ *   with no other parsing/changes being performed (I.e., boolean `true` will be saved to file as string `1` instead of
+ *   `true`, `on`, etc.)
+ *
  * @package SierraKomodo\INILib
  * @version 0.1.0-review.3 Peer review version 3. Currently in development; Not fully tested yet.
  */
@@ -37,22 +41,39 @@ class IniFile
      * @var int The INI scanner mode to use when running parse_ini_* operations. Should be one of the predefined
      *   INI_SCANNER_* options.
      * @used-by IniFile::__construct()
+     * @used-by IniFile::parseIniData()
      */
     protected $iniScannerMode;
+    /**
+     * @var bool Read-only flag. Determines if any write operations are allowed.
+     * @used-by IniFile::__construct()
+     * @used-by IniFile::saveDataToFile()
+     */
+    protected $readOnly = false;
     
     
     /**
      * IniFile constructor.
      *
-     * @param SplFileObject $parFile The INI file to initialize the object with
+     * @param string $parFile The full or relative path to the INI file to initialize the `SplFileObject` with
+     * @param bool $parReadOnly Read-only flag
      * @param int $parScannerMode See parseINIData() parameter $parScannerMode
      * @uses IniFile::$fileObject
+     * @uses IniFile::$readOnly
+     * @uses IniFile::$iniScannerMode
      * @uses IniFile::parseIniData()
-     * @throws IniFileException for invalid parameters, or if the file is not readable
+     * @throws IniFileException for invalid parameters, if the file doesn't exist, or if the file is not readable
      */
-    public function __construct(SplFileObject $parFile, int $parScannerMode = INI_SCANNER_TYPED)
+    public function __construct(string $parFile, bool $parReadOnly = false, int $parScannerMode = INI_SCANNER_TYPED)
     {
         // Parameter validation
+        if (file_exists($parFile) === false) {
+            throw new IniFileException(
+                "The file {$parFile} does not exist",
+                IniFileException::ERR_FILE_NOT_EXIST
+            );
+        }
+        
         if (in_array($parScannerMode, [INI_SCANNER_NORMAL, INI_SCANNER_TYPED, INI_SCANNER_RAW], true) === false) {
             throw new IniFileException(
                 'Provided scanner mode is invalid. Must be one of `INI_SCANNER_NORMAL`, `INI_SCANNER_TYPED`, or `INI_SCANNER_RAW`',
@@ -60,15 +81,23 @@ class IniFile
             );
         }
         
-        // Verify the file is readable
-        if ($parFile->isReadable() === false) {
+        // Create the SplFileObject
+        if ($parReadOnly === true) {
+            $this->fileObject = new SplFileObject($parFile, 'r');
+        } else {
+            $this->fileObject = new SplFileObject($parFile, 'r+');
+        }
+        
+        // Verify the file is readable by `SplFileObject` - This validation is done here, in the off chance
+        //  `is_readable()` returns `true`, but `SplFileObject::isReadable()` returns `false`
+        if ($this->fileObject->isReadable() === false) {
             throw new IniFileException(
-                "The file {$parFile->getPathname()} could not be read",
+                "The file {$this->fileObject->getPathname()} could not be read",
                 IniFileException::ERR_FILE_NOT_READABLE
             );
         }
         
-        $this->fileObject     = $parFile;
+        $this->readOnly       = $parReadOnly;
         $this->iniScannerMode = $parScannerMode;
         $this->parseIniData();
     }
@@ -83,10 +112,19 @@ class IniFile
      * @param string $parSection INI section
      * @param string $parKey INI key
      * @return void
+     * @throws IniFileException if the object is in read-only mode
      * @uses IniFile::$iniDataArray
      */
     public function deleteEntry(string $parSection, string $parKey)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         $parKey     = trim($parKey);
@@ -106,10 +144,19 @@ class IniFile
      *
      * @param string $parSection
      * @return void
+     * @throws IniFileException if the object is in read-only mode
      * @uses IniFile::$iniDataArray
      */
     public function deleteSection(string $parSection)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         
@@ -176,16 +223,25 @@ class IniFile
      * Saves configuration data from memory into the INI file
      *
      * @return void
-     * @throws IniFileException If the file could not be locked, or if there was some other failure with write operations
+     * @throws IniFileException If the read only flag is set, the file could not be locked, or if there was some other
+     *   failure with write operations
      * @uses IniFile::$fileObject
      * @uses IniFile::generateFileContent()
      */
     public function saveDataToFile()
     {
+        // Check if read-only flag is set
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Check if file is writable
         if ($this->fileObject->isWritable() === false) {
             throw new IniFileException(
-                "File is not writable. Did you set the SplFileObject's open mode?",
+                "File is not writable by the SplFileObject",
                 IniFileException::ERR_FILE_NOT_WRITABLE
             );
         }
@@ -239,12 +295,20 @@ class IniFile
      * @param string $parKey INI key
      * @param string $parValue Desired new value
      * @return void
-     * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
-     *   saved to a file
+     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
+     *   or would cause INI parsing errors if saved to a file
      * @uses IniFile::$iniDataArray
      */
     public function setEntry(string $parSection, string $parKey, string $parValue)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         $parKey     = trim($parKey);
@@ -258,7 +322,7 @@ class IniFile
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
+        
         $check = $this->validateKey($parKey);
         if ($check !== true) {
             throw new IniFileException(
@@ -266,7 +330,7 @@ class IniFile
                 IniFileException::ERR_INVALID_PARAMETER
             );
         }
-    
+        
         $check = $this->validateValue($parValue);
         if ($check !== true) {
             throw new IniFileException(
@@ -296,11 +360,19 @@ class IniFile
      * @param bool $parMergeArrays Default `FALSE`. If set to `TRUE`, existing entries under the given section name will
      *   be merged with the new data. Key name conflicts will be overwritten by the new data.
      * @return void
-     * @throws IniFileException if any parameters do not fit proper INI formatting or would cause INI parsing errors if
-     *   saved to a file
+     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
+     *   or would cause INI parsing errors if saved to a file
      */
     public function setSection(string $parSection, array $parKeyValuePairs, bool $parMergeArrays = false)
     {
+        // Check for read only state
+        if ($this->readOnly === true) {
+            throw new IniFileException(
+                'IniFile object is in read only mode',
+                IniFileException::ERR_READ_ONLY_MODE
+            );
+        }
+        
         // Trim whitespace
         $parSection = trim($parSection);
         foreach ($parKeyValuePairs as $key => $value) {

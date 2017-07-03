@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 
+## v0.1.1-review.3 - 2017-07-02
+### Fixed
+ - `IniFile::deleteEntry()` and `IniFile::deleteSection()` will now delete entries, even if `!empty()` and `isset()` checks would return `FALSE` (I.e., a value was `NULL`)
+ - `IniFile::fetchEntry()` and `IniFile::fetchSection()` will now return values instead of `NULL` if the value is `0`, an empty string, or some other value that `empty()` would have returned `TRUE` on.
+
+
 ## v0.1.0-review.3 - 2017-07-02
 ### Added
  - `IniFile::fetchSection()` method to retrieve full sections from memory

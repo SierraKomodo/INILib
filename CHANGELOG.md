@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 ## [Unreleased]
+
+
+## v0.1.0-review.3 - 2017-07-02
 ### Added
  - `IniFile::fetchSection()` method to retrieve full sections from memory
  - `IniFile::deleteSection()` method to delete full sections from memory

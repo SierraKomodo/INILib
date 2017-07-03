@@ -166,9 +166,7 @@ class IniFile
         $parKey     = trim($parKey);
         
         // Modify the data array
-        if (!empty($this->iniDataArray[$parSection][$parKey])) {
-            unset($this->iniDataArray[$parSection][$parKey]);
-        }
+        unset($this->iniDataArray[$parSection][$parKey]);
     }
     
     
@@ -202,9 +200,7 @@ class IniFile
         $parSection = trim($parSection);
         
         // Modify the data array
-        if (!empty($this->iniDataArray[$parSection])) {
-            unset($this->iniDataArray[$parSection]);
-        }
+        unset($this->iniDataArray[$parSection]);
     }
     
     
@@ -240,8 +236,8 @@ class IniFile
      */
     public function fetchEntry(string $parSection, string $parKey)
     {
-        // If the entry is empty, return null
-        if (empty($this->iniDataArray[$parSection][$parKey])) {
+        // If the entry does not exist, return null (Prevents undefined index errors)
+        if (isset($this->iniDataArray[$parSection][$parKey]) === false) {
             return null;
         }
         
@@ -263,8 +259,8 @@ class IniFile
      */
     public function fetchSection(string $parSection)
     {
-        // If the entry is empty, return null
-        if (empty($this->iniDataArray[$parSection])) {
+        // If the entry does not exist, return null (Prevents undefined index errors)
+        if (isset($this->iniDataArray[$parSection]) === false) {
             return null;
         }
         

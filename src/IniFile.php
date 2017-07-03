@@ -13,8 +13,8 @@ use SplFileObject;
 /**
  * Primary INI library class
  *
- * Leveraging a provided SplFileObject pointing to an INI file, this class provides in-memory reading and modifying of
- *   data stored in INI files. Methods are also provided to write any changes made in memory to the INI file.
+ * Leveraging an `SplFileObject` pointing to an INI file, this class provides in-memory reading and modifying of data
+ *   stored in INI files. Methods are also provided to write any changes made in memory to the INI file.
  *
  * NOTE: Due to current limitations, values in the data array will be directly converted to strings when saved to file,
  *   with no other parsing/changes being performed (I.e., boolean `true` will be saved to file as string `1` instead of
@@ -27,27 +27,45 @@ class IniFile
 {
     /**
      * @var SplFileObject The INI file being read and modified by this class
-     * @used-by IniFile::__construct()
-     * @used-by IniFile::parseIniData()
+     *
+     * @used-by IniFile::__construct() to instantiate the SplFileObject
+     * @used-by IniFile::saveDataToFile() to check if the file is writable, toggle file locks, and write to the file
+     * @used-by IniFile::parseIniData() to acquire file locks and read from the file
      */
     protected $fileObject;
+    
     /**
-     * @var array The contents of the INI file, converted to a multi-layer array (Same format as \parse_ini_file())
-     * @used-by IniFile::parseIniData()
-     * @used-by IniFile::generateFileContent()
+     * @var array The contents of the INI file, converted to a multi-layer array. Essentially, the output of
+     *   `parse_ini_file()`
+     *
+     * @used-by IniFile::deleteEntry() to remove the specified entry from memory
+     * @used-by IniFile::deleteSection() to remove the specified section from memory
+     * @used-by IniFile::fetchDataArray() as the returned array
+     * @used-by IniFile::fetchEntry() to retrieve the requested entry
+     * @used-by IniFile::fetchSection() to retrieve the requested section
+     * @used-by IniFile::setEntry() to add/modify the specified key=value pair in memory
+     * @used-by IniFile::setSection() to add/modify the specified section in memory
+     * @used-by IniFile::generateFileContent() to parse and format the data array into INI content
+     * @used-by IniFile::parseIniData() to populate the data array with the parsed INI data
      */
     protected $iniDataArray = array();
+    
     /**
-     * @var int The INI scanner mode to use when running parse_ini_* operations. Should be one of the predefined
-     *   INI_SCANNER_* options.
-     * @used-by IniFile::__construct()
-     * @used-by IniFile::parseIniData()
+     * @var int The INI scanner mode to use when running `parse_ini_*` operations. Should be one of the predefined
+     *   `INI_SCANNER_*` options.
+     *
+     * @used-by IniFile::__construct() to pass on the `$parScannerMode` parameter
+     * @used-by IniFile::parseIniData() to pass onto the `parse_ini_string` call used to parse INI data
      */
     protected $iniScannerMode;
+    
     /**
      * @var bool Read-only flag. Determines if any write operations are allowed.
-     * @used-by IniFile::__construct()
-     * @used-by IniFile::saveDataToFile()
+     *
+     * @used-by IniFile::__construct() to pass on the `$parReadOnly` parameter
+     * @used-by IniFile::saveDataToFile() to check if the object is set to read only mode
+     * @used-by IniFile::setEntry() to check if the object is set to read only mode
+     * @used-by IniFile::setSection() to check if the object is set to read only mode
      */
     protected $readOnly = false;
     
@@ -55,14 +73,26 @@ class IniFile
     /**
      * IniFile constructor.
      *
+     * Creates an `SplFileObject` object using the provided filename and generates a data array from the file contents.
+     *   If ReadOnly is `TRUE`, the `IniFile` object will not allow any operations that could modify the data array or
+     *   the file itself.
+     *
      * @param string $parFile The full or relative path to the INI file to initialize the `SplFileObject` with
-     * @param bool $parReadOnly Read-only flag
-     * @param int $parScannerMode See parseINIData() parameter $parScannerMode
-     * @uses IniFile::$fileObject
-     * @uses IniFile::$readOnly
-     * @uses IniFile::$iniScannerMode
-     * @uses IniFile::parseIniData()
-     * @throws IniFileException for invalid parameters, if the file doesn't exist, or if the file is not readable
+     * @param bool $parReadOnly Optional - Default: `FALSE`. Read-only flag. See description above.
+     * @param int $parScannerMode Optional - Default `INI_SCANNER_TYPE`. The INI scanner mode to use. See the
+     *   scanner_mode section of http://php.net/manual/en/function.parse-ini-file.php for details. Should be one of
+     *   `INI_SCANNER_NORMAL`, `INI_SCANNER_TYPED`, or `INI_SCANNER_RAW`
+     *
+     * @throws IniFileException code `IniFileException::ERR_FILE_NOT_EXIST` if the provided filepath does not exist
+     * @throws IniFileException code `IniFileException::ERR_INVALID_PARAMETER` if the scanner mode provided is not one
+     *   of the accepted scanner modes.
+     * @throws IniFileException code `IniFileException::ERR_FILE_NOT_READABLE` if the provided filepath is unreadable
+     *   according to `SplFileObject::isReadable()`
+     *
+     * @uses IniFile::$fileObject to instantiate the SplFileObject and verify readability of the file
+     * @uses IniFile::$iniScannerMode to pass on the `$parScannerMode` parameter
+     * @uses IniFile::$readOnly to pass on the `$parReadOnly` parameter
+     * @uses IniFile::parseIniData() to initialise `IniFile::iniDataArray`
      */
     public function __construct(string $parFile, bool $parReadOnly = false, int $parScannerMode = INI_SCANNER_TYPED)
     {
@@ -106,14 +136,20 @@ class IniFile
     /**
      * Deletes a key=value pair from a specified section header in memory
      *
-     * Parameters are trimmed of leading and trailing whitespace using trim() for consistency with the functionality of
-     *   $this->setKey()
+     * Parameters are trimmed of leading and trailing whitespace using `trim()` for consistency with the functionality
+     *   of `IniFile::setKey()`
      *
-     * @param string $parSection INI section
-     * @param string $parKey INI key
+     * Validation is not performed on section or key names as invalid names will simply have no effect on the data array
+     *
+     * @param string $parSection INI section to delete from
+     * @param string $parKey INI key to delete
+     *
      * @return void
-     * @throws IniFileException if the object is in read-only mode
-     * @uses IniFile::$iniDataArray
+     *
+     * @throws IniFileException code `IniFileException::ERR_READ_ONLY_MODE` if the `$readOnly` property is set to `TRUE`
+     *
+     * @uses IniFile::$readOnly to check if the object is set to read only mode
+     * @uses IniFile::$iniDataArray to remove the specified entry from memory
      */
     public function deleteEntry(string $parSection, string $parKey)
     {
@@ -129,9 +165,6 @@ class IniFile
         $parSection = trim($parSection);
         $parKey     = trim($parKey);
         
-        // Omitting parameter validations - As this method only deletes existing entries, any invalid section or key
-        //  names will just have no effect.
-        
         // Modify the data array
         if (!empty($this->iniDataArray[$parSection][$parKey])) {
             unset($this->iniDataArray[$parSection][$parKey]);
@@ -142,10 +175,18 @@ class IniFile
     /**
      * Deletes a full section from memory
      *
-     * @param string $parSection
+     * Parameters are trimmed of leading and trailing whitespace using `trim()` for consistency with the functionality
+     *   of `IniFile::setSection()`
+     *
+     * Validation is not performed on section or key names as invalid names will simply have no effect on the data array
+     *
+     * @param string $parSection INI section to delete
+     *
      * @return void
-     * @throws IniFileException if the object is in read-only mode
-     * @uses IniFile::$iniDataArray
+     *
+     * @throws IniFileException code `IniFileException::ERR_READ_ONLY_MODE` if the `$readOnly` property is set to `TRUE`
+     *
+     * @uses IniFile::$iniDataArray to remove the specified section from memory
      */
     public function deleteSection(string $parSection)
     {
@@ -168,10 +209,12 @@ class IniFile
     
     
     /**
-     * Getter for $iniDataArray, to prevent arbitrary modifications to the array.
+     * Getter for the full $iniDataArray, to prevent arbitrary modifications to the array.
      *
-     * @return array $this->$iniDataArray
-     * @uses IniFile::$iniDataArray
+     * @return array The contents of `IniFile::$iniDataArray`. This will be a nested associative array in the format of
+     *   `$array['Section']['Key'] = 'Value'`
+     *
+     * @uses IniFile::$iniDataArray as the returned array
      */
     public function fetchDataArray(): array
     {
@@ -180,12 +223,20 @@ class IniFile
     
     
     /**
-     * Fetches a specified key=value pair from the data array. Alternative to using dataArray() to fetch the entire array
+     * Fetches a specified key=value pair from the data array. Alternative to using `IniFile::fetchDataArray()` to fetch
+     *   the entire array
      *
-     * @param string $parSection
-     * @param string $parKey
-     * @return mixed|null The requested value or `NULL` if no matching entry was found
-     * @uses IniFile::$iniDataArray
+     * NOTE: If `IniFile::$iniScannerMode` is set to `INI_SCANNER_TYPED`, any INI entries with a value of 'null' will
+     *   be parsed by PHP as the literal constant `NULL`, and in turn this method will return `NULL` instead of a
+     *   string.
+     *
+     * @param string $parSection INI section to fetch the entry from
+     * @param string $parKey INI key to fetch
+     *
+     * @return mixed|null The requested value or `NULL` if no matching entry was found. Type of the returned value is
+     *   dependent on `IniFile::$iniScannerMode` and the value entered in the INI file itself.
+     *
+     * @uses IniFile::$iniDataArray to retrieve the requested entry
      */
     public function fetchEntry(string $parSection, string $parKey)
     {
@@ -200,12 +251,15 @@ class IniFile
     
     
     /**
-     * Fetches a specified section array from the full data array.
+     * Fetches a specified section array from the full data array.  Alternative to using `IniFile::fetchDataArray()` to
+     *   fetch the entire array
      *
      * @param string $parSection
-     * @return array|null A key indexed array of values from the specified INI section, or `NULL` if no matching entry
-     *   was found
-     * @uses IniFile::$iniDataArray
+     *
+     * @return array|null An associative array of key=value pairs from the specified INI section, or `NULL` if no
+     *   matching section was found
+     *
+     * @uses IniFile::$iniDataArray to retrieve the requested section
      */
     public function fetchSection(string $parSection)
     {
@@ -222,11 +276,20 @@ class IniFile
     /**
      * Saves configuration data from memory into the INI file
      *
+     * NOTE: This method will attempt to acquire an exclusive file lock before writing to the file.
+     *
      * @return void
-     * @throws IniFileException If the read only flag is set, the file could not be locked, or if there was some other
-     *   failure with write operations
-     * @uses IniFile::$fileObject
-     * @uses IniFile::generateFileContent()
+     *
+     * @throws IniFileException code `IniFileException::ERR_READ_ONLY_MODE` if the `$readOnly` property is set to `TRUE`
+     * @throws IniFileException code `IniFileException::ERR_FILE_NOT_WRITABLE` if the file is unwritable according to
+     *   `SplFileObject::isWritable()`
+     * @throws IniFileException code `IniFileException::ERR_FILE_LOCK_FAILED` if `SplFileObject::flock()` failed to
+     *   acquire an exclusive lock for writing
+     * @throws IniFileException code `IniFileException::ERR_FILE_READ_WRITE_FAILED` if the file write operations failed
+     *
+     * @uses IniFile::$fileObject to check if the file is writable, toggle file locks, and write to the file
+     * @uses IniFile::$readOnly to check if the object is set to read only mode
+     * @uses IniFile::generateFileContent() to generate properly formatted INI content from the data array
      */
     public function saveDataToFile()
     {
@@ -291,13 +354,21 @@ class IniFile
      *   better consistency in writing and reading of INI files between this class, parse_ini_* functions, and any other
      *   programs written in other languages that may need to access these files.
      *
-     * @param string $parSection INI section
-     * @param string $parKey INI key
+     * @param string $parSection INI section to modify
+     * @param string $parKey INI key to add/change
      * @param string $parValue Desired new value
+     *
      * @return void
-     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
-     *   or would cause INI parsing errors if saved to a file
-     * @uses IniFile::$iniDataArray
+     *
+     * @throws IniFileException code `IniFileException::ERR_READ_ONLY_MODE` if the `$readOnly` property is set to `TRUE`
+     * @throws IniFileException code `IniFileException::ERR_INVALID_PARAMETER` if the section, key, or value failed
+     *   validation checks
+     *
+     * @uses IniFile::$iniDataArray to add/modify the specified key=value pair in memory
+     * @uses IniFile::$readOnly to check if the object is set to read only mode
+     * @uses IniFile::validateKey() to validate the key parameter
+     * @uses IniFile::validateSection() to validate the section parameter
+     * @uses IniFile::validateValue() to validate the value parameter
      */
     public function setEntry(string $parSection, string $parKey, string $parValue)
     {
@@ -355,13 +426,23 @@ class IniFile
      *   better consistency in writing and reading of INI files between this class, parse_ini_* functions, and any other
      *   programs written in other languages that may need to access these files.
      *
-     * @param string $parSection INI section name
+     * @param string $parSection INI section to add/modify
      * @param array $parKeyValuePairs An associative array of key=value pairs the INI section should contain
-     * @param bool $parMergeArrays Default `FALSE`. If set to `TRUE`, existing entries under the given section name will
-     *   be merged with the new data. Key name conflicts will be overwritten by the new data.
+     * @param bool $parMergeArrays Optional - Default `FALSE`. If set to `TRUE`, existing entries under the given
+     *   section name will be merged with the new data using `array_merge()`. Key name conflicts will be overwritten by
+     *   the new data.
+     *
      * @return void
-     * @throws IniFileException if the object is in read-only mode or if any parameters do not fit proper INI formatting
-     *   or would cause INI parsing errors if saved to a file
+     *
+     * @throws IniFileException code `IniFileException::ERR_READ_ONLY_MODE` if the `$readOnly` property is set to `TRUE`
+     * @throws IniFileException code `IniFileException::ERR_INVALID_PARAMETER` if the section or any keys or values from
+     *   the `$parKeyValuePairs` parameter failed validation checks
+     *
+     * @uses IniFile::$readOnly to check if the object is set to read only mode
+     * @uses IniFile::$iniDataArray to add/modify the specified section in memory
+     * @uses IniFile::validateKey() to validate the each key name in the `$parKeyValuePairs` parameter
+     * @uses IniFile::validateSection() to validate the section parameter
+     * @uses IniFile::validateValue() to validate the each value in the `$parKeyValuePairs` parameter
      */
     public function setSection(string $parSection, array $parKeyValuePairs, bool $parMergeArrays = false)
     {
@@ -426,9 +507,14 @@ class IniFile
     /**
      * Generates a formatted string of INI data, primarily used for writing to INI files
      *
+     * NOTE: Line breaks use the `PHP_EOL` built-in constant. This may cause some inconsistency between files generated
+     *   on windows based systems (`\r\n`) and unix based systems (`\n`).
+     *
      * @return string The formatted string of INI data
-     * @uses    IniFile::$iniDataArray
-     * @used-by IniFile::saveDataToFile()
+     *
+     * @uses IniFile::$iniDataArray to parse and format the data array into INI content
+     *
+     * @used-by IniFile::saveDataToFile() to generate properly formatted INI content from the data array
      */
     protected function generateFileContent()
     {
@@ -459,9 +545,19 @@ class IniFile
      *   the file, due to parameter restrictions in the SplFileObject::fread() method.
      *
      * @return void
-     * @uses IniFile::$fileObject
-     * @uses IniFile::$iniDataArray
-     * @throws IniFileException if the file could not be locked, read, or parsed
+     *
+     * @throws IniFileException code `IniFileException::ERR_FILE_LOCK_FAILED` if `SplFileObject::flock()` failed to
+     *   acquire a shared lock for reading
+     * @throws IniFileException code `IniFileException::ERR_FILE_READ_WRITE_FAILED` if `SplFileObject` read operations
+     *   failed
+     * @throws IniFileException code `IniFileException::ERR_INI_PARSE_FAILED` if `parse_ini_string` failed to parse file
+     *   contents
+     *
+     * @uses IniFile::$fileObject to acquire file locks and read from the file
+     * @uses IniFile::$iniDataArray to populate the data array with the parsed INI data
+     * @uses IniFile::$iniScannerMode to pass onto the `parse_ini_string` call used to parse INI data
+     *
+     * @used-by IniFile::__construct() to initialise `IniFile::iniDataArray`
      */
     protected function parseIniData()
     {
@@ -514,7 +610,11 @@ class IniFile
      *   sections (`[` and `]`), comments (`;` and `#`), and separate keys from values (`=`)
      *
      * @param string $parKey
+     *
      * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     *
+     * @used-by IniFile::setEntry() to validate the key parameter
+     * @used-by IniFile::setSection() to validate the each key name in the `$parKeyValuePairs` parameter
      */
     protected function validateKey(string $parKey)
     {
@@ -538,7 +638,11 @@ class IniFile
      *   sections (`[` and `]`)
      *
      * @param string $parSection
+     *
      * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     *
+     * @used-by IniFile::setEntry() to validate the section parameter
+     * @used-by IniFile::setSection() to validate the section parameter
      */
     protected function validateSection(string $parSection)
     {
@@ -559,7 +663,11 @@ class IniFile
      * Invalid inputs include line breaks (`\r` and `\n`)
      *
      * @param string $parValue
+     *
      * @return bool|string True if the input is valid, or a string containing details on why the input is invalid
+     *
+     * @used-by IniFile::setEntry() to validate the value parameter
+     * @used-by IniFile::setSection() to validate the each value in the `$parKeyValuePairs` parameter
      */
     protected function validateValue(string $parValue)
     {

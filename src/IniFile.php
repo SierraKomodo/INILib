@@ -237,7 +237,10 @@ class IniFile
     public function fetchEntry(string $parSection, string $parKey)
     {
         // If the entry does not exist, return null (Prevents undefined index errors)
-        if (isset($this->iniDataArray[$parSection][$parKey]) === false) {
+        if (array_key_exists($parSection, $this->iniDataArray) === false) {
+            return null;
+        }
+        if (array_key_exists($parKey, $this->iniDataArray[$parSection]) === false) {
             return null;
         }
         
@@ -260,7 +263,7 @@ class IniFile
     public function fetchSection(string $parSection)
     {
         // If the entry does not exist, return null (Prevents undefined index errors)
-        if (isset($this->iniDataArray[$parSection]) === false) {
+        if (array_key_exists($parSection, $this->iniDataArray) === false) {
             return null;
         }
         

@@ -207,7 +207,7 @@ class IniFile
     /**
      * Getter for the full $iniDataArray, to prevent arbitrary modifications to the array.
      *
-     * @return array The contents of `IniFile::$iniDataArray`. This will be a nested associative array in the format of
+     * @return array[] The contents of `IniFile::$iniDataArray`. This will be a nested associative array in the format of
      *   `$array['Section']['Key'] = 'Value'`
      *
      * @uses IniFile::$iniDataArray as the returned array
@@ -250,12 +250,12 @@ class IniFile
     
     
     /**
-     * Fetches a specified section array from the full data array.  Alternative to using `IniFile::fetchDataArray()` to
+     * Fetches a specified section array from the full data array. Alternative to using `IniFile::fetchDataArray()` to
      *   fetch the entire array
      *
      * @param string $parSection
      *
-     * @return array|null An associative array of key=value pairs from the specified INI section, or `NULL` if no
+     * @return mixed[]|null An associative array of key=value pairs from the specified INI section, or `NULL` if no
      *   matching section was found
      *
      * @uses IniFile::$iniDataArray to retrieve the requested section
@@ -426,7 +426,7 @@ class IniFile
      *   programs written in other languages that may need to access these files.
      *
      * @param string $parSection INI section to add/modify
-     * @param array $parKeyValuePairs An associative array of key=value pairs the INI section should contain
+     * @param array[] $parKeyValuePairs An associative array of key=value pairs the INI section should contain
      * @param bool $parMergeArrays Optional - Default `FALSE`. If set to `TRUE`, existing entries under the given
      *   section name will be merged with the new data using `array_merge()`. Key name conflicts will be overwritten by
      *   the new data.

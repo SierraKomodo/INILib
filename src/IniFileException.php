@@ -16,7 +16,7 @@ namespace SierraKomodo\INILib;
  *   messages can provide specific information in logs for debugging and bug fixing.
  *
  * @package SierraKomodo\INILib
- * @version 0.1.0-review.3 Peer review version 3. Currently in development; Not fully tested yet.
+ * @version 1.0.0 First full release
  */
 class IniFileException extends \Exception
 {

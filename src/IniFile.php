@@ -79,7 +79,7 @@ class IniFile
      *
      * @param string $parFile The full or relative path to the INI file to initialize the `SplFileObject` with
      * @param bool $parReadOnly Optional - Default: `FALSE`. Read-only flag. See description above.
-     * @param int $parScannerMode Optional - Default `INI_SCANNER_TYPE`. The INI scanner mode to use. See the
+     * @param int $parScannerMode Optional - Default `INI_SCANNER_RAW`. The INI scanner mode to use. See the
      *   scanner_mode section of http://php.net/manual/en/function.parse-ini-file.php for details. Should be one of
      *   `INI_SCANNER_NORMAL`, `INI_SCANNER_TYPED`, or `INI_SCANNER_RAW`
      *
@@ -94,7 +94,7 @@ class IniFile
      * @uses IniFile::$readOnly to pass on the `$parReadOnly` parameter
      * @uses IniFile::parseIniData() to initialise `IniFile::iniDataArray`
      */
-    public function __construct(string $parFile, bool $parReadOnly = false, int $parScannerMode = INI_SCANNER_TYPED)
+    public function __construct(string $parFile, bool $parReadOnly = false, int $parScannerMode = INI_SCANNER_RAW)
     {
         // Parameter validation
         if (file_exists($parFile) === false) {

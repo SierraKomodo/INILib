@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 The contents of this changelog are focused on changes to overall behaviour of this library, as relevant to a developer using its classes. Internal changes that don't affect this behaviour are ommitted, or simply noted as 'Minor internal changes', 'Minor performance optimizations', etc.
 
 ## [UNRELEASED]
+### Added
+ - `IniFileException::ERR_INVALID_PROPERTY_DATA` as a possible exception code, representing situations where a class's property contains invalid or no data
 
 
 ## v1.0.0 - 2017-07-06

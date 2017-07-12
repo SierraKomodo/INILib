@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 The contents of this changelog are focused on changes to overall behaviour of this library, as relevant to a developer using its classes. Internal changes that don't affect this behaviour are ommitted, or simply noted as 'Minor internal changes', 'Minor performance optimizations', etc.
 
+## v1.0.1 - [Unreleased]
+### Changed
+ - Key validation now includes keywords that cannot be used as INI keys
+
 
 ## v1.0.0 - 2017-07-06
 ### Changed

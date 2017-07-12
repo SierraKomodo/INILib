@@ -298,6 +298,17 @@ INI
     }
     
     
+    public function testSetEntryRejectsReservedWordsInKey()
+    {
+        touch($this->fileNamePrebuilt);
+        $this->iniFile = new IniFile($this->fileNamePrebuilt);
+        self::expectException(IniFileException::class);
+        self::expectExceptionCode(IniFileException::ERR_INVALID_PARAMETER);
+        
+        $this->iniFile->setEntry('Section', 'On', "Value");
+    }
+    
+    
     public function testSetEntryStripsWhitespace()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
@@ -327,9 +338,9 @@ INI
     public function testSetEntryAcceptsInteger()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-    
+        
         $this->iniFile = new IniFile($this->fileNamePrebuilt);
-    
+        
         $this->iniFile->setEntry('Section', 'Key', 1);
         self::assertEquals(1, $this->iniFile->fetchEntry('Section', 'Key'));
     }
@@ -338,9 +349,9 @@ INI
     public function testSetEntryAcceptsFloat()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-    
+        
         $this->iniFile = new IniFile($this->fileNamePrebuilt);
-    
+        
         $this->iniFile->setEntry('Section', 'Key', 1.65);
         self::assertEquals(1.65, $this->iniFile->fetchEntry('Section', 'Key'));
     }
@@ -349,9 +360,9 @@ INI
     public function testSetEntryAcceptsBool()
     {
         file_put_contents($this->fileNamePrebuilt, $this->filePrebuiltContents);
-    
+        
         $this->iniFile = new IniFile($this->fileNamePrebuilt);
-    
+        
         $this->iniFile->setEntry('Section', 'Key', true);
         self::assertEquals(true, $this->iniFile->fetchEntry('Section', 'Key'));
     }

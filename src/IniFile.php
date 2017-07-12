@@ -511,7 +511,7 @@ class IniFile
      *
      * @return string The formatted string of INI data
      *
-     * @uses IniFile::$iniDataArray to parse and format the data array into INI content
+     * @uses    IniFile::$iniDataArray to parse and format the data array into INI content
      *
      * @used-by IniFile::saveDataToFile() to generate properly formatted INI content from the data array
      */
@@ -552,9 +552,9 @@ class IniFile
      * @throws IniFileException code `IniFileException::ERR_INI_PARSE_FAILED` if `parse_ini_string` failed to parse file
      *   contents
      *
-     * @uses IniFile::$fileObject to acquire file locks and read from the file
-     * @uses IniFile::$iniDataArray to populate the data array with the parsed INI data
-     * @uses IniFile::$iniScannerMode to pass onto the `parse_ini_string` call used to parse INI data
+     * @uses    IniFile::$fileObject to acquire file locks and read from the file
+     * @uses    IniFile::$iniDataArray to populate the data array with the parsed INI data
+     * @uses    IniFile::$iniScannerMode to pass onto the `parse_ini_string` call used to parse INI data
      *
      * @used-by IniFile::__construct() to initialise `IniFile::iniDataArray`
      */
@@ -619,10 +619,17 @@ class IniFile
     {
         // Check for line breaks or specific 'key' characters:
         //   [ and ] are 'control' characters for section names
-        //   ; and # are 'control' characters that designate the start of comments
+        //   ; and # are 'control' characters that designate the start of comments in some parsers
         //   = is a 'control' character that separates key from value
-        if (preg_match('/\[|\]|\r|\n|=|^(;|#)/', $parKey)) {
+        //   The following characters are defined as 'cannot be used' in php.net documentation: ?{}|&~![()^"
+        if (preg_match('/\[|\]|=|^(;|#)|\r|\n|\?|{|}|\||&|~|!|\(|\)|\^/', $parKey)) {
             return "cannot contain the characters '[', ']', ';', '#', '=', or line breaks";
+        }
+        
+        // Check if key is any of the reserved words as defined in http://php.net/manual/en/function.parse-ini-string.php
+        $reservedWords = ['null', 'yes', 'no', 'true', 'false', 'on', 'off', 'none'];
+        if (in_array(strtolower($parKey), $reservedWords)) {
+            return "cannot be any of the following: '" . implode("', '", $reservedWords) . "'";
         }
         
         // If all checks passed, return true

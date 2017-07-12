@@ -129,7 +129,7 @@ class IniFile
         
         $this->readOnly       = $parReadOnly;
         $this->iniScannerMode = $parScannerMode;
-        $this->parseIniData();
+        $this->iniDataArray = $this->parseIniData();
     }
     
     
@@ -567,7 +567,7 @@ class IniFile
      * Note that if the file is empty (Has a file size of 0), this method will store an empty array instead or reading
      *   the file, due to parameter restrictions in the SplFileObject::fread() method.
      *
-     * @return void
+     * @return array[]
      *
      * @throws IniFileException code `IniFileException::ERR_FILE_LOCK_FAILED` if `SplFileObject::flock()` failed to
      *   acquire a shared lock for reading
@@ -582,12 +582,12 @@ class IniFile
      *
      * @used-by IniFile::__construct() to initialise `IniFile::iniDataArray`
      */
-    protected function parseIniData()
+    protected function parseIniData(): array
     {
         // If file size is 0, set an empty array - fread() will fail otherwise
         if ($this->fileObject->getSize() == 0) {
-            $this->iniDataArray = array();
-            return;
+            // $this->iniDataArray = array();
+            array();
         }
         
         // Lock the file for reading
@@ -622,7 +622,8 @@ class IniFile
                 IniFileException::ERR_INI_PARSE_FAILED
             );
         }
-        $this->iniDataArray = $result;
+        // $this->iniDataArray = $result;
+        return $result;
     }
     
     

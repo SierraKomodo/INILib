@@ -503,6 +503,30 @@ class IniFile
     }
     
     
+    protected function convertValueToIniEntryString(mixed $parValue): string
+    {
+        switch ($this->iniScannerMode) {
+            case INI_SCANNER_NORMAL:
+                
+                break;
+                
+            case INI_SCANNER_RAW:
+                
+                break;
+                
+            case INI_SCANNER_TYPED:
+                
+                break;
+                
+            default:
+                throw new IniFileException(
+                    "Data contained in `self::\$parValue` is invalid. Expected one of: [`" . INI_SCANNER_NORMAL . "`, `" . INI_SCANNER_RAW . "`, `" . INI_SCANNER_TYPED . "`] - Received: `{$this->iniScannerMode}`",
+                    IniFileException::ERR_INVALID_PROPERTY_DATA
+                );
+        }
+    }
+    
+    
     /**
      * Generates a formatted string of INI data, primarily used for writing to INI files
      *

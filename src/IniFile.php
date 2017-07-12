@@ -129,7 +129,7 @@ class IniFile
         
         $this->readOnly       = $parReadOnly;
         $this->iniScannerMode = $parScannerMode;
-        $this->iniDataArray = $this->parseIniData();
+        $this->iniDataArray   = $this->parseIniData();
     }
     
     
@@ -509,21 +509,28 @@ class IniFile
             case INI_SCANNER_NORMAL:
                 
                 break;
-                
+            
             case INI_SCANNER_RAW:
+                if ($parValue === true) {
+                    $parValue = 'true';
+                } elseif ($parValue === false) {
+                    $parValue = 'false';
+                }
                 
                 break;
-                
+            
             case INI_SCANNER_TYPED:
                 
                 break;
-                
+            
             default:
                 throw new IniFileException(
                     "Data contained in `self::\$parValue` is invalid. Expected one of: [`" . INI_SCANNER_NORMAL . "`, `" . INI_SCANNER_RAW . "`, `" . INI_SCANNER_TYPED . "`] - Received: `{$this->iniScannerMode}`",
                     IniFileException::ERR_INVALID_PROPERTY_DATA
                 );
         }
+        
+        return (string)$parValue;
     }
     
     
@@ -535,7 +542,7 @@ class IniFile
      *
      * @return string The formatted string of INI data
      *
-     * @uses IniFile::$iniDataArray to parse and format the data array into INI content
+     * @uses    IniFile::$iniDataArray to parse and format the data array into INI content
      *
      * @used-by IniFile::saveDataToFile() to generate properly formatted INI content from the data array
      */
@@ -576,9 +583,9 @@ class IniFile
      * @throws IniFileException code `IniFileException::ERR_INI_PARSE_FAILED` if `parse_ini_string` failed to parse file
      *   contents
      *
-     * @uses IniFile::$fileObject to acquire file locks and read from the file
-     * @uses IniFile::$iniDataArray to populate the data array with the parsed INI data
-     * @uses IniFile::$iniScannerMode to pass onto the `parse_ini_string` call used to parse INI data
+     * @uses    IniFile::$fileObject to acquire file locks and read from the file
+     * @uses    IniFile::$iniDataArray to populate the data array with the parsed INI data
+     * @uses    IniFile::$iniScannerMode to pass onto the `parse_ini_string` call used to parse INI data
      *
      * @used-by IniFile::__construct() to initialise `IniFile::iniDataArray`
      */

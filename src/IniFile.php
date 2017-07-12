@@ -509,21 +509,28 @@ class IniFile
             case INI_SCANNER_NORMAL:
                 
                 break;
-                
+            
             case INI_SCANNER_RAW:
+                if ($parValue === true) {
+                    $parValue = 'true';
+                } elseif ($parValue === false) {
+                    $parValue = 'false';
+                }
                 
                 break;
-                
+            
             case INI_SCANNER_TYPED:
                 
                 break;
-                
+            
             default:
                 throw new IniFileException(
                     "Data contained in `self::\$parValue` is invalid. Expected one of: [`" . INI_SCANNER_NORMAL . "`, `" . INI_SCANNER_RAW . "`, `" . INI_SCANNER_TYPED . "`] - Received: `{$this->iniScannerMode}`",
                     IniFileException::ERR_INVALID_PROPERTY_DATA
                 );
         }
+        
+        return (string)$parValue;
     }
     
     

@@ -594,7 +594,7 @@ class IniFile
         // If file size is 0, set an empty array - fread() will fail otherwise
         if ($this->fileObject->getSize() == 0) {
             // $this->iniDataArray = array();
-            array();
+            return array();
         }
         
         // Lock the file for reading

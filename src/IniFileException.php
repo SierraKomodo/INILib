@@ -54,6 +54,10 @@ class IniFileException extends \Exception
      */
     const ERR_READ_ONLY_MODE = 8;
     /**
+     * @var Integer Exception code; One or more class properties have invalid or missing data
+     */
+    const ERR_INVALID_PROPERTY_DATA = 9;
+    /**
      * @var Integer Exception code; No exception code was provided in the throw statement, or no pre-defined codes match
      *   the scenario
      */

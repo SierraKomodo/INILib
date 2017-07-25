@@ -503,8 +503,10 @@ class IniFile
     }
     
     
-    protected function convertValueToIniEntryString(mixed $parValue): string
+    protected function convertValueToIniEntryString(mixed $parValue, string $parKey = null): string
     {
+        $currentIniData = $this->parseIniData();
+        
         switch ($this->iniScannerMode) {
             case INI_SCANNER_NORMAL:
                 

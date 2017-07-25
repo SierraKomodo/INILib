@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 The contents of this changelog are focused on changes to overall behaviour of this library, as relevant to a developer using its classes. Internal changes that don't affect this behaviour are ommitted, or simply noted as 'Minor internal changes', 'Minor performance optimizations', etc.
 
+## [UNRELEASED]
+### Changed
+ - Package is now reliant on `SierraKomodo/PhpCommonLibrary`
+ 
+
 ## v1.0.1 - 2017-07-12
 ### Changed
  - Key validation now includes keywords that cannot be used as INI keys

@@ -8,6 +8,8 @@
 
 namespace SierraKomodo\INILib;
 
+use SierraKomodo\PhpCommonLibrary\PclExceptionWithCode;
+
 /**
  * Extension of \Exception to provide predefined 'exception codes' for debugging/error handling purposes
  *
@@ -18,7 +20,7 @@ namespace SierraKomodo\INILib;
  * @package SierraKomodo\INILib
  * @version 1.0.0 First full release
  */
-class IniFileException extends \Exception
+class IniFileException extends PclExceptionWithCode
 {
     // Error code constants
     /**
@@ -53,25 +55,4 @@ class IniFileException extends \Exception
      * @var Integer Exception code; The object is in read only mode and a write operation was attempted
      */
     const ERR_READ_ONLY_MODE = 8;
-    /**
-     * @var Integer Exception code; No exception code was provided in the throw statement, or no pre-defined codes match
-     *   the scenario
-     */
-    const ERR_UNDEFINED = -1;
-    
-    
-    /**
-     * INILibException constructor.
-     *
-     * The only difference from Exception::__construct() is the default for parameter $code being set to
-     *   self::ERR_UNDEFINED
-     *
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct($message = "", $code = self::ERR_UNDEFINED, \Exception $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-    }
 }
